@@ -9,11 +9,11 @@
 <body>
     <nav class="navbar">
         <div class="nav-brand">GOBIERNO - CIUDADANÍA</div>
-        <button onclick="location.href='index.html'" class="btn-logout">Policía</button>
+        <button onclick="location.href='index.html'" class="btn-logout">Acceso Policía</button>
     </nav>
 
     <div class="main-container">
-        <!-- Botones Pestañas -->
+        <!-- Pestañas -->
         <div style="display:flex; margin-bottom:20px;">
             <button class="tab-btn active" onclick="openTab('ver')">CONSULTAR DNI</button>
             <button class="tab-btn" onclick="openTab('crear')">CREAR DNI</button>
@@ -25,7 +25,7 @@
             <div class="panel">
                 <h3>VER MI DNI</h3>
                 <input type="text" id="verDNIInput" placeholder="Tu DNI exacto...">
-                <button class="btn-blue" onclick="buscarDNI()">BUSCAR</button>
+                <button class="btn-blue" onclick="window.buscarDNI()">BUSCAR</button>
                 <div id="resultadoDNI"></div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <input type="date" id="newNac">
                 <input type="text" id="newFoto" placeholder="URL Foto (Imgur/Discord)">
                 <select id="newGen"><option value="H">Hombre</option><option value="M">Mujer</option></select>
-                <button class="btn-login" style="background:var(--success)" onclick="guardarDNI()">REGISTRARSE</button>
+                <button class="btn-login" style="background:var(--success)" onclick="window.guardarDNI()">REGISTRARSE</button>
             </div>
         </div>
 
@@ -49,24 +49,28 @@
                 <h3 style="color:#c0392b">REPORTAR DNI PERDIDO</h3>
                 <input type="text" id="recNombre" placeholder="Tu Nombre">
                 <textarea id="recMotivo" placeholder="Motivo (CK, Robo, Error...)"></textarea>
-                <button class="btn-login" style="background:#e67e22" onclick="enviarReporte()">ENVIAR A STAFF</button>
+                <button class="btn-login" style="background:#e67e22" onclick="window.enviarReporte()">ENVIAR A STAFF</button>
             </div>
         </div>
     </div>
 
-    <!-- CARGAMOS SCRIPT MODULO -->
-    <script type="module">
-        import { db } from './firebase.js';
-        import { collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    <!-- Cargamos config -->
+    <script src="config.js"></script>
 
-        // --- FUNCIONES GLOBALES (Para que los botones HTML funcionen) ---
+    <!-- SCRIPT TIPO MODULE PARA FIREBASE -->
+    <script type="module">
+        import { db, collection, addDoc, getDocs, query, where } from './firebase.js';
+
+        // --- TRUCO PARA QUE FUNCIONEN LOS BOTONES ---
         
+        // 1. Pestañas
         window.openTab = function(id) {
             document.querySelectorAll('.tab-content').forEach(d => d.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('tab-'+id).style.display = 'block';
         }
 
+        // 2. Guardar DNI
         window.guardarDNI = async function() {
             const nombre = document.getElementById('newNombre').value;
             const dni = document.getElementById('newDNI').value;
@@ -76,7 +80,6 @@
 
             if(!nombre || !dni) return alert("Faltan datos.");
 
-            // Comprobar si existe
             const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
             const snap = await getDocs(q);
             if(!snap.empty) return alert("¡Ese DNI ya está cogido!");
@@ -85,9 +88,10 @@
                 await addDoc(collection(db, "ciudadanos"), { nombre, dni, foto, nac, gen });
                 alert("✅ DNI Creado Correctamente");
                 location.reload();
-            } catch(e) { console.error(e); alert("Error de base de datos"); }
+            } catch(e) { console.error(e); alert("Error de base de datos. Revisa firebase.js"); }
         }
 
+        // 3. Buscar DNI
         window.buscarDNI = async function() {
             const dni = document.getElementById('verDNIInput').value;
             if(!dni) return;
@@ -95,6 +99,8 @@
             const snap = await getDocs(q);
             
             const div = document.getElementById('resultadoDNI');
+            div.innerHTML = "";
+            
             if(snap.empty) {
                 div.innerHTML = "<p>No encontrado.</p>";
             } else {
@@ -114,19 +120,19 @@
                 });
             }
         }
-    </script>
-    <script src="config.js"></script>
-    <script>
-        // Funcion normal para el reporte (no necesita firebase)
+
+        // 4. Reporte (Webhook)
         window.enviarReporte = function() {
             const nom = document.getElementById('recNombre').value;
             const mot = document.getElementById('recMotivo').value;
             if(!nom) return alert("Pon tu nombre.");
             
+            if(!WEBHOOK_STAFF || WEBHOOK_STAFF.includes("PEGA_")) return alert("Configura la Webhook de Staff en config.js");
+
             const embed = { title:"🚨 DNI PERDIDO", color:15158332, fields:[{name:"Nombre",value:nom},{name:"Motivo",value:mot}] };
             fetch(WEBHOOK_STAFF, {
                 method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({embeds:[embed]})
-            }).then(() => alert("Aviso enviado."));
+            }).then(() => alert("Aviso enviado.")).catch(() => alert("Error enviando."));
         }
     </script>
 </body>
