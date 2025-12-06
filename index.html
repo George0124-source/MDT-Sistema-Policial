@@ -3,55 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Restringido - CNP/GC</title>
+    <title>Acceso Central - CNP/GC</title>
+    <!-- Vinculamos el diseño -->
     <link rel="stylesheet" href="style.css">
+    <!-- Iconos para que quede bonito -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="login-body">
 
     <div class="login-container">
         <div class="login-header">
+            <!-- Puedes cambiar esta imagen por el escudo de tu servidor si quieres -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" alt="Bandera España" class="flag-icon">
             <h2>ACCESO CENTRAL</h2>
-            <p>Ministerio del Interior</p>
+            <p style="color: #888; margin-top: 5px;">Ministerio del Interior</p>
         </div>
         
         <form id="loginForm">
             <div class="input-group">
-                <label>NÚMERO DE PLACA</label>
-                <input type="text" id="badge" placeholder="Ej: CNP-001" required>
+                <label><i class="fas fa-id-badge"></i> NÚMERO DE PLACA</label>
+                <input type="text" id="badge" placeholder="Ej: CNP-001" required autocomplete="off">
             </div>
             
             <div class="input-group">
-                <label>CONTRASEÑA</label>
+                <label><i class="fas fa-lock"></i> CONTRASEÑA</label>
                 <input type="password" id="password" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="btn-login">INICIAR SESIÓN</button>
-            <p id="errorMsg" class="error-msg"></p>
+            <button type="submit" class="btn-login">
+                INICIAR SESIÓN <i class="fas fa-arrow-right"></i>
+            </button>
+            
+            <p id="errorMsg" class="error-msg">
+                <i class="fas fa-exclamation-triangle"></i> Credenciales incorrectas.
+            </p>
         </form>
+
+        <div style="margin-top: 20px; font-size: 11px; color: #555;">
+            Sistema de Acceso Restringido. Todo intento de acceso no autorizado será registrado.
+        </div>
     </div>
 
+    <!-- Cargamos la configuración con las placas y contraseñas -->
     <script src="config.js"></script>
+
     <script>
-        // Lógica simple de Login conectada a config.js
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const badge = document.getElementById('badge').value;
-            const pass = document.getElementById('password').value;
+            e.preventDefault(); // Evita que la página se recargue
+
+            const badgeInput = document.getElementById('badge').value;
+            const passInput = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMsg');
 
-            // Buscamos si la placa existe y la contraseña coincide
-            const oficial = AGENTES.find(u => u.placa === badge && u.pass === pass);
+            // Buscamos si la placa y contraseña coinciden con la lista de config.js
+            // Usamos .find() para buscar en el array AGENTES
+            const oficial = AGENTES.find(u => u.placa === badgeInput && u.pass === passInput);
 
             if (oficial) {
-                // Guardamos la sesión
+                // Si es correcto, guardamos la sesión en el navegador
                 sessionStorage.setItem('oficialLogueado', JSON.stringify(oficial));
-                window.location.href = 'sistema.html';
+                
+                // REDIRECCIÓN: Ahora vamos al MENU PRINCIPAL (Base de datos)
+                window.location.href = 'menu.html';
             } else {
-                errorMsg.textContent = "ACCESO DENEGADO: Credenciales inválidas.";
+                // Si falla, mostramos el mensaje de error
                 errorMsg.style.display = 'block';
+                // Efecto de temblor en el formulario (opcional visual)
+                document.querySelector('.login-container').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.querySelector('.login-container').style.animation = '';
+                }, 500);
             }
         });
     </script>
+
+    <style>
+        /* Pequeña animación de temblor para cuando fallas la contraseña */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
 </body>
 </html>
