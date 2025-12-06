@@ -2,113 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Central - Ministerio del Interior</title>
-    <!-- Vinculamos el diseño -->
+    <title>Acceso Central</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Iconos para que quede profesional -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Animación de error (temblor) */
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-        
-        .citizen-link {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #444;
-        }
-        .citizen-btn {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: underline;
-            transition: 0.3s;
-        }
-        .citizen-btn:hover { color: var(--accent); }
-    </style>
 </head>
 <body class="login-body">
-
     <div class="login-container">
-        <div class="login-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" alt="Bandera España" class="flag-icon">
-            <h2>ACCESO CENTRAL</h2>
-            <p style="color: #888; margin-top: 5px; font-size: 12px; letter-spacing: 1px;">CUERPOS DE SEGURIDAD DEL ESTADO</p>
-        </div>
-        
+        <h2>ACCESO CENTRAL</h2>
         <form id="loginForm">
             <div class="input-group">
-                <label><i class="fas fa-id-badge"></i> NÚMERO DE PLACA</label>
-                <input type="text" id="badge" placeholder="Ej: CNP-001" required autocomplete="off">
+                <label>PLACA</label>
+                <input type="text" id="badge" required>
             </div>
-            
             <div class="input-group">
-                <label><i class="fas fa-lock"></i> CONTRASEÑA</label>
-                <input type="password" id="password" placeholder="••••••••" required>
+                <label>CONTRASEÑA</label>
+                <input type="password" id="password" required>
             </div>
-
-            <button type="submit" class="btn-login">
-                INICIAR SESIÓN <i class="fas fa-arrow-right"></i>
-            </button>
-            
-            <p id="errorMsg" class="error-msg">
-                <i class="fas fa-exclamation-circle"></i> Placa o contraseña incorrecta.
-            </p>
+            <button type="submit" class="btn-login">ENTRAR</button>
+            <p id="errorMsg" class="error-msg">Datos incorrectos.</p>
         </form>
-
-        <!-- ENLACE PARA CIUDADANOS (SIN CONTRASEÑA) -->
-        <div class="citizen-link">
-            <button class="citizen-btn" onclick="window.location.href='publico.html'">
-                <i class="fas fa-users"></i> ¿Eres ciudadano? Acceso a Sede Electrónica
-            </button>
-        </div>
+        <button onclick="window.location.href='publico.html'" style="margin-top:20px; background:none; border:none; color:#aaa; cursor:pointer; text-decoration:underline;">
+            Acceso Ciudadanos (DNI)
+        </button>
     </div>
-
-    <!-- 1. Cargamos la configuración (Donde están las placas y contraseñas) -->
     <script src="config.js"></script>
-
-    <!-- 2. Lógica del Login -->
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
-
-            const badgeInput = document.getElementById('badge').value;
-            const passInput = document.getElementById('password').value;
-            const errorMsg = document.getElementById('errorMsg');
-            const container = document.querySelector('.login-container');
-
-            // --- VERIFICACIÓN DE SEGURIDAD ---
-            // Buscamos si la placa existe en la lista AGENTES del archivo config.js
-            const oficial = AGENTES.find(u => u.placa === badgeInput && u.pass === passInput);
-
-            if (oficial) {
-                // ✅ ACCESO CORRECTO
-                // Guardamos quién ha entrado para usar su nombre en las multas
-                sessionStorage.setItem('oficialLogueado', JSON.stringify(oficial));
-                
-                // Redirigimos al MENÚ PRINCIPAL
-                window.location.href = 'menu.html';
-            } else {
-                // ❌ ACCESO DENEGADO
-                errorMsg.style.display = 'block';
-                
-                // Efecto visual de temblor
-                container.style.animation = 'none';
-                container.offsetHeight; /* Reinicia el flujo */
-                container.style.animation = 'shake 0.5s';
-                
-                // Borramos la contraseña
-                document.getElementById('password').value = "";
-            }
-        });
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>
