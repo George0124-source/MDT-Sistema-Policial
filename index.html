@@ -2,23 +2,39 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso Central</title>
+    <title>Acceso Policial</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-body">
     <div class="login-container">
-        <h2>ACCESO CENTRAL</h2>
+        <h2 style="color:white; margin-bottom:20px;">SISTEMA MDT</h2>
         <form id="loginForm">
-            <input type="text" id="badge" placeholder="PLACA" required>
-            <input type="password" id="password" placeholder="CONTRASEÑA" required>
-            <button type="submit" class="btn-login">ENTRAR</button>
+            <div class="input-group">
+                <label>PLACA</label>
+                <input type="text" id="badge" required>
+            </div>
+            <div class="input-group">
+                <label>CONTRASEÑA</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn-login">ACCEDER</button>
+            <p id="errorMsg" style="color:#dc3545; display:none; margin-top:10px;">Acceso Denegado.</p>
         </form>
-        <p id="errorMsg" style="color:red; display:none;">Error de credenciales.</p>
-        <div style="margin-top:20px; border-top:1px solid #444; padding-top:10px;">
-            <button onclick="window.location.href='publico.html'" style="background:none; border:none; color:#aaa; cursor:pointer; text-decoration:underline;">Ir a Sede Ciudadanos (DNI)</button>
-        </div>
     </div>
     <script src="config.js"></script>
-    <script src="index.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const badge = document.getElementById('badge').value;
+            const pass = document.getElementById('password').value;
+            const user = AGENTES.find(u => u.placa === badge && u.pass === pass);
+            if (user) {
+                sessionStorage.setItem('oficialLogueado', JSON.stringify(user));
+                window.location.href = 'sistema.html';
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
