@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilos específicos para la zona pública */
         .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .tab-btn { flex: 1; padding: 15px; background: #333; border: none; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
         .tab-btn.active { background: var(--accent); }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.5s; }
         
+        /* Diseño del DNI Visual */
         .dni-card-visual {
             background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 100%);
             color: #000; padding: 20px; border-radius: 10px; border: 1px solid #999;
@@ -32,23 +32,22 @@
 
     <nav class="navbar" style="background: #2c3e50;">
         <div class="nav-brand"><i class="fas fa-landmark"></i> GOBIERNO DE ESPAÑA</div>
-        <!-- Botón para ir al login de policía -->
         <button onclick="location.href='index.html'" class="btn-logout" style="background: #333;">Soy Policía</button>
     </nav>
 
     <div class="main-container" style="display: block; max-width: 800px; margin: 0 auto;">
         
+        <!-- PESTAÑAS -->
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('ver')"><i class="fas fa-search"></i> CONSULTAR DNI</button>
-            <button class="tab-btn" onclick="switchTab('crear')"><i class="fas fa-plus-circle"></i> NUEVO REGISTRO</button>
-            <button class="tab-btn" onclick="switchTab('reclamar')" style="background: #c0392b;"><i class="fas fa-exclamation-triangle"></i> PERDÍ MI DNI</button>
+            <button class="tab-btn active" onclick="verPestana('ver')"><i class="fas fa-search"></i> CONSULTAR DNI</button>
+            <button class="tab-btn" onclick="verPestana('crear')"><i class="fas fa-plus-circle"></i> NUEVO REGISTRO</button>
+            <button class="tab-btn" onclick="verPestana('reclamar')" style="background: #c0392b;"><i class="fas fa-exclamation-triangle"></i> PERDÍ MI DNI</button>
         </div>
 
-        <!-- PESTAÑA 1: VER DNI -->
+        <!-- 1. VER DNI -->
         <div id="tab-ver" class="tab-content active">
             <div class="panel">
                 <h3 style="text-align:center;">CONSULTA DE DOCUMENTACIÓN</h3>
-                <p style="text-align:center; color:#888;">Introduce tu número de DNI para visualizarlo.</p>
                 <div class="search-box">
                     <input type="text" id="inputBuscarDNI" placeholder="Introduzca su DNI (Ej: 12345678X)">
                     <button onclick="buscarMiDNI()" class="btn-blue" style="width: auto; padding: 0 20px;">VER</button>
@@ -57,7 +56,7 @@
             </div>
         </div>
 
-        <!-- PESTAÑA 2: CREAR DNI -->
+        <!-- 2. CREAR DNI -->
         <div id="tab-crear" class="tab-content">
             <div class="panel">
                 <h3><i class="fas fa-user-edit"></i> REGISTRO CIVIL</h3>
@@ -84,18 +83,17 @@
                         <option value="M">Mujer</option>
                     </select>
                 </div>
-                <button id="btnCrear" class="btn-login" style="background: var(--success); margin-top: 15px;">REGISTRAR CIUDADANO</button>
+                <!-- Botón corregido -->
+                <button onclick="crearNuevoDNI()" class="btn-login" style="background: var(--success); margin-top: 15px;">REGISTRAR CIUDADANO</button>
             </div>
         </div>
 
-        <!-- PESTAÑA 3: RECLAMAR / RESTABLECER -->
+        <!-- 3. RECLAMAR -->
         <div id="tab-reclamar" class="tab-content">
             <div class="panel" style="border: 1px solid #c0392b;">
                 <h3 style="color: #c0392b;"><i class="fas fa-bell"></i> SOLICITUD DE RESTABLECIMIENTO</h3>
                 <p style="font-size: 13px; color: #aaa;">
-                    Use esto solo si ha perdido su DNI, se lo han robado o hay un error. 
-                    Esto enviará un aviso a los <strong>Administradores (Staff)</strong>. Ellos revisarán el caso.
-                    <strong>NO SE BORRARÁ AUTOMÁTICAMENTE</strong> para evitar fraudes.
+                    Use esto solo si ha perdido su DNI. Se avisará al Staff.
                 </p>
 
                 <div class="input-group">
@@ -108,111 +106,120 @@
                 </div>
                 <div class="input-group">
                     <label>Motivo de la solicitud:</label>
-                    <textarea id="reclamaMotivo" placeholder="Ej: CK, error en el nombre, robo de identidad..." style="width:100%; height:80px; background:#333; color:white; border:none; padding:10px;"></textarea>
+                    <textarea id="reclamaMotivo" placeholder="Ej: CK, error, robo..." style="width:100%; height:80px; background:#333; color:white; border:none; padding:10px;"></textarea>
                 </div>
+                <!-- Botón corregido -->
                 <button onclick="enviarReclamacion()" class="btn-login" style="background: #e67e22;">ENVIAR SOLICITUD A STAFF</button>
             </div>
         </div>
 
     </div>
 
+    <!-- Cargamos config primero -->
     <script src="config.js"></script>
-    <!-- Script Modular para Firebase -->
+    
+    <!-- Script Modular (Lógica) -->
     <script type="module">
         import { db, collection, addDoc, getDocs, query, where } from './firebase.js';
 
-        // Hacer las funciones globales para los botones HTML
-        window.switchTab = function(tabId) {
+        // --- FUNCIÓN PESTAÑAS ---
+        window.verPestana = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
             document.getElementById('tab-' + tabId).classList.add('active');
-            event.target.classList.add('active');
         }
 
-        // --- 1. FUNCIÓN VER DNI ---
-        window.buscarMiDNI = async function() {
-            const dni = document.getElementById('inputBuscarDNI').value;
-            if(!dni) return alert("Escribe un DNI.");
-
-            const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
-            const snapshot = await getDocs(q);
-
-            if(snapshot.empty) {
-                alert("❌ DNI no encontrado. ¿Está bien escrito?");
-                document.getElementById('resultadoDNI').style.display = 'none';
-            } else {
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const html = `
-                        <div class="dni-card-visual">
-                            <i class="fas fa-crown watermark"></i>
-                            <img src="${data.foto || 'https://i.imgur.com/v0k4a45.png'}" class="dni-photo">
-                            <div class="dni-details">
-                                <h3>DOCUMENTO NACIONAL</h3>
-                                <p><strong>NOMBRE:</strong> ${data.nombre}</p>
-                                <p><strong>DNI:</strong> <span style="color:#c0392b; font-weight:bold;">${data.dni}</span></p>
-                                <p><strong>NACIMIENTO:</strong> ${data.nacimiento}</p>
-                                <p><strong>GÉNERO:</strong> ${data.genero === 'H' ? 'Hombre' : 'Mujer'}</p>
-                                <p style="font-size:10px; margin-top:10px;">MINISTERIO DEL INTERIOR</p>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('resultadoDNI').innerHTML = html;
-                    document.getElementById('resultadoDNI').style.display = 'block';
-                });
-            }
-        }
-
-        // --- 2. FUNCIÓN CREAR DNI ---
-        document.getElementById('btnCrear').addEventListener('click', async () => {
+        // --- FUNCIÓN 1: CREAR DNI ---
+        window.crearNuevoDNI = async function() {
             const nombre = document.getElementById('nuevoNombre').value;
             const dni = document.getElementById('nuevoDNI').value;
             const foto = document.getElementById('nuevoFoto').value;
             const nac = document.getElementById('nuevoNac').value;
             const gen = document.getElementById('nuevoGen').value;
 
-            if(!nombre || !dni) return alert("Nombre y DNI son obligatorios.");
+            if(!nombre || !dni) return alert("❌ Nombre y DNI son obligatorios.");
 
-            // Comprobar si ya existe
-            const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
-            const check = await getDocs(q);
-            
-            if(!check.empty) {
-                return alert("⚠️ ESE DNI YA EXISTE. Elige otro número.");
-            }
-
+            // Verificar si existe
             try {
+                const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
+                const check = await getDocs(q);
+                
+                if(!check.empty) {
+                    return alert("⚠️ ESE DNI YA EXISTE. Elige otro número.");
+                }
+
+                // Guardar
                 await addDoc(collection(db, "ciudadanos"), {
                     nombre: nombre, dni: dni, nacimiento: nac, foto: foto, genero: gen
                 });
-                alert("✅ ¡Registro Completado! Ya tienes tu DNI.");
-                location.reload();
+                alert("✅ ¡DNI Creado con éxito!");
+                location.reload(); // Recargar para limpiar
             } catch (e) {
-                alert("Error al guardar.");
+                console.error(e);
+                alert("❌ Error al conectar con la base de datos.");
             }
-        });
+        }
 
-        // --- 3. FUNCIÓN RECLAMAR DNI (WEBHOOK) ---
+        // --- FUNCIÓN 2: VER DNI ---
+        window.buscarMiDNI = async function() {
+            const dni = document.getElementById('inputBuscarDNI').value;
+            if(!dni) return alert("Escribe un DNI.");
+
+            try {
+                const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
+                const snapshot = await getDocs(q);
+
+                if(snapshot.empty) {
+                    alert("❌ DNI no encontrado.");
+                    document.getElementById('resultadoDNI').style.display = 'none';
+                } else {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const html = `
+                            <div class="dni-card-visual">
+                                <i class="fas fa-crown watermark"></i>
+                                <img src="${data.foto || 'https://i.imgur.com/v0k4a45.png'}" class="dni-photo">
+                                <div class="dni-details">
+                                    <h3>DOCUMENTO NACIONAL</h3>
+                                    <p><strong>NOMBRE:</strong> ${data.nombre}</p>
+                                    <p><strong>DNI:</strong> <span style="color:#c0392b; font-weight:bold;">${data.dni}</span></p>
+                                    <p><strong>NACIMIENTO:</strong> ${data.nacimiento}</p>
+                                    <p><strong>GÉNERO:</strong> ${data.genero === 'H' ? 'Hombre' : 'Mujer'}</p>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById('resultadoDNI').innerHTML = html;
+                        document.getElementById('resultadoDNI').style.display = 'block';
+                    });
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Error al buscar.");
+            }
+        }
+
+        // --- FUNCIÓN 3: ENVIAR RECLAMACIÓN ---
         window.enviarReclamacion = function() {
             const nombre = document.getElementById('reclamaNombre').value;
             const dni = document.getElementById('reclamaDNI').value;
             const motivo = document.getElementById('reclamaMotivo').value;
 
-            if(!nombre || !motivo) return alert("Rellena el nombre y el motivo.");
-            if(WEBHOOK_STAFF.includes("PEGA_AQUI")) return alert("Error: Configura la Webhook de Staff.");
+            if(!nombre || !motivo) return alert("Rellena nombre y motivo.");
+            
+            // Usamos la variable global de config.js
+            if(!WEBHOOK_STAFF || WEBHOOK_STAFF.includes("PEGA_AQUI")) {
+                return alert("⚠️ Error: La Webhook de Staff no está configurada en config.js");
+            }
 
             const embed = {
-                title: "🚨 SOLICITUD DE RESTABLECIMIENTO DE DNI",
-                color: 15158332, // Rojo
-                description: "Un ciudadano solicita ayuda con su documentación.",
+                title: "🚨 RECLAMACIÓN DE DNI (PERDIDO/ROBADO)",
+                color: 15158332,
                 fields: [
-                    { name: "👤 Nombre PJ", value: nombre, inline: true },
-                    { name: "🆔 DNI Afectado", value: dni || "Desconocido", inline: true },
-                    { name: "📝 Motivo / Problema", value: motivo }
+                    { name: "👤 Personaje", value: nombre, inline: true },
+                    { name: "🆔 DNI", value: dni || "No recuerda", inline: true },
+                    { name: "📝 Motivo", value: motivo }
                 ],
-                footer: { text: "Panel de Reclamaciones - Esperando acción de Staff" },
-                timestamp: new Date()
+                footer: { text: "Sistema Sede Electrónica" }
             };
 
             fetch(WEBHOOK_STAFF, {
@@ -221,10 +228,10 @@
                 body: JSON.stringify({ embeds: [embed] })
             }).then(res => {
                 if(res.ok) {
-                    alert("✅ Solicitud enviada a los Administradores.\nEspera a que te contacten o revisen el caso.");
-                    document.getElementById('reclamaMotivo').value = "";
+                    alert("✅ Solicitud enviada al Staff. Ellos contactarán contigo.");
+                    location.reload();
                 } else {
-                    alert("Error al enviar.");
+                    alert("❌ Error al enviar a Discord.");
                 }
             });
         }
