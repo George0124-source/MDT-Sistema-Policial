@@ -1,6 +1,6 @@
-// ==========================================
-// BASE DE DATOS DEL CÓDIGO PENAL (COMPLETO)
-// ==========================================
+// =========================================================
+// 1. BASE DE DATOS DEL CÓDIGO PENAL (LEYES COMPLETAS)
+// =========================================================
 
 const codigoPenal = [
     // --- TÍTULO I: CORRUPCIÓN ---
@@ -41,7 +41,7 @@ const codigoPenal = [
     { id: "2.33", titulo: "Negarse a identificarse", multa: 1000, meses: 0.25 },
     { id: "2.34", titulo: "Obstrucción a la justicia", multa: 1000, meses: 0 },
     { id: "2.35", titulo: "Llevar máscara sin motivo", multa: 500, meses: 0 },
-    { id: "2.36", titulo: "Manifestación ilegal", multa: 10000, meses: 0 }, // Media estimada
+    { id: "2.36", titulo: "Manifestación ilegal", multa: 10000, meses: 0 },
     { id: "2.37", titulo: "Acoso o intimidación", multa: 1300, meses: 0 },
     { id: "2.38", titulo: "Incitación al odio/violencia", multa: 2000, meses: 0 },
     { id: "2.39", titulo: "Delito de Estafa", multa: 3000, meses: 0 },
@@ -53,8 +53,9 @@ const codigoPenal = [
     { id: "2.45", titulo: "Intento rebelión / Golpe Estado", multa: 100000, meses: 999 }, // Permanente
     { id: "2.46", titulo: "Atentado Terrorista", multa: 500000, meses: 999 }, // Perpetua
     { id: "2.47", titulo: "Fraude electoral", multa: 50000, meses: 36 },
+    { id: "2.48", titulo: "Impago de multas (+100k)", multa: 0, meses: 999 },
 
-    // --- ROBOS Y ASALTOS (Dentro de Título II) ---
+    // --- ROBOS Y ASALTOS ---
     { id: "2.49", titulo: "Robo con intimidación a civil", multa: 3500, meses: 3 },
     { id: "2.50", titulo: "Robo con violencia a civil", multa: 4500, meses: 6 },
     { id: "2.51", titulo: "Robo Menor (Gasolinera/ATM)", multa: 15000, meses: 36 },
@@ -73,7 +74,7 @@ const codigoPenal = [
     { id: "3.1.7", titulo: "Conductor en mal estado", multa: 1000, meses: 0 },
     { id: "3.1.8", titulo: "Accidente sin heridos", multa: 3000, meses: 0 },
     { id: "3.1.9", titulo: "Accidente con heridos", multa: 5000, meses: 0 },
-    { id: "3.1.10", titulo: "Provocar accidente grave", multa: 10000, meses: 0.25 }, // 1 sem
+    { id: "3.1.10", titulo: "Provocar accidente grave", multa: 10000, meses: 0.25 },
     { id: "3.1.11", titulo: "Sin cinturón abrochado", multa: 200, meses: 0 },
     { id: "3.1.12", titulo: "Estacionar lugar no permitido", multa: 200, meses: 0 },
     { id: "3.1.13", titulo: "Estacionar indebidamente", multa: 100, meses: 0 },
@@ -100,7 +101,7 @@ const codigoPenal = [
 
     // --- TÍTULO III: CARNETS (Sección 2) ---
     { id: "3.2.1", titulo: "Conducir sin Carnet", multa: 5000, meses: 5 },
-    { id: "3.2.2", titulo: "Conducir sin Carnet encima", multa: 500, meses: 0 }, // 1 dia
+    { id: "3.2.2", titulo: "Conducir sin Carnet encima", multa: 500, meses: 0 },
     { id: "3.2.3", titulo: "Conducir sin Carnet Tipo B", multa: 1000, meses: 1 },
     { id: "3.2.4", titulo: "Conducir sin Carnet Tipo C1", multa: 5000, meses: 12 },
     { id: "3.2.5", titulo: "Conducir sin Carnet Tipo C", multa: 8000, meses: 12 },
@@ -165,207 +166,220 @@ const codigoPenal = [
     { id: "9.1", titulo: "Grabar policía sin permiso", multa: 2500, meses: 0 }
 ];
 
-// ==========================================
-// LÓGICA DEL SISTEMA
-// ==========================================
-let seleccionados = [];
+// =========================================================
+// 2. LÓGICA DE LA CALCULADORA Y EL SISTEMA
+// =========================================================
 
+let selected = [];
+
+// Inicialización cuando carga la página
 document.addEventListener('DOMContentLoaded', () => {
-    const lista = document.getElementById('articlesList');
     
-    // Renderizar lista
-    codigoPenal.forEach(art => {
-        const div = document.createElement('div');
-        div.className = 'article-item';
-        
+    // Verificar si estamos en la página del sistema (sistema.html)
+    // Si no existe el elemento 'list', es que estamos en otra página, así que paramos.
+    const listDiv = document.getElementById('list');
+    if(!listDiv) return; 
+
+    // 1. Renderizar la lista completa al inicio
+    renderList(codigoPenal);
+
+    // 2. Activar el buscador
+    const searchInput = document.getElementById('search');
+    if(searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            // Filtramos por título o por ID
+            const filtered = codigoPenal.filter(x => 
+                x.titulo.toLowerCase().includes(val) || 
+                x.id.includes(val)
+            );
+            renderList(filtered);
+        });
+    }
+});
+
+// Función para pintar la lista de leyes en la izquierda
+function renderList(arr) {
+    const listDiv = document.getElementById('list');
+    listDiv.innerHTML = "";
+    
+    arr.forEach(art => {
+        // Calcular texto de tiempo bonito
         let tiempoTexto = "";
-        if (art.meses >= 999) tiempoTexto = "CADENA PERPETUA";
+        if (art.meses >= 999) tiempoTexto = "PERPETUA";
         else if (art.meses >= 12) {
             const anios = Math.floor(art.meses / 12);
             const resto = art.meses % 12;
-            tiempoTexto = anios + " Años" + (resto > 0 ? " y " + resto + " Meses" : "");
+            tiempoTexto = anios + " Años" + (resto > 0 ? " " + resto + "m" : "");
         } else if (art.meses > 0) {
-            tiempoTexto = art.meses < 1 ? "Semanas/Días" : art.meses + " Meses";
+            tiempoTexto = art.meses < 1 ? "Días/Sems" : art.meses + " Meses";
         }
 
-        div.innerHTML = `
-            <div style="flex:1">
+        const d = document.createElement('div');
+        d.className = 'article-item';
+        d.innerHTML = `
+            <div>
                 <strong style="color:var(--accent)">[${art.id}]</strong> ${art.titulo}
-                <div style="font-size:11px; color:#888; margin-top:2px;">${tiempoTexto}</div>
+                <div style="font-size:11px; color:#888;">${tiempoTexto}</div>
             </div>
             <div class="price-tag">${art.multa.toLocaleString()}€</div>
         `;
-        div.onclick = () => agregarCargo(art);
-        lista.appendChild(div);
+        d.onclick = () => add(art);
+        listDiv.appendChild(d);
     });
-
-    // Buscador
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const texto = e.target.value.toLowerCase();
-        document.querySelectorAll('.article-item').forEach(item => {
-            item.style.display = item.innerText.toLowerCase().includes(texto) ? 'flex' : 'none';
-        });
-    });
-});
-
-function agregarCargo(articulo) {
-    seleccionados.push(articulo);
-    actualizarResumen();
 }
 
-function quitarCargo(index) {
-    seleccionados.splice(index, 1);
-    actualizarResumen();
+// Añadir ley al carrito
+function add(art) {
+    selected.push(art);
+    update();
 }
 
-function clearAll() {
-    seleccionados = [];
-    document.getElementById('detenidoInput').value = "";
-    document.getElementById('detallesInput').value = "";
-    document.getElementById('discordDetenidoInput').value = "";
-    actualizarResumen();
+// Borrar todo
+function clearAll() { 
+    selected = []; 
+    document.getElementById('detName').value = "";
+    document.getElementById('detDiscord').value = "";
+    document.getElementById('detDetails').value = "";
+    update(); 
 }
 
-function actualizarResumen() {
-    const contenedor = document.getElementById('summaryList');
-    contenedor.innerHTML = '';
+// Quitar una ley específica
+function del(index) {
+    selected.splice(index, 1);
+    update();
+}
+
+// Actualizar el resumen derecho (Totales)
+function update() {
+    const sumDiv = document.getElementById('summ');
+    sumDiv.innerHTML = "";
     
     let totalMulta = 0;
     let totalMeses = 0;
 
-    if (seleccionados.length === 0) {
-        contenedor.innerHTML = '<p class="placeholder-text">Seleccione cargos del panel izquierdo...</p>';
+    if(selected.length === 0) {
+        sumDiv.innerHTML = "<p style='color:#666; text-align:center; margin-top:20px;'>Ningún cargo seleccionado.</p>";
     }
 
-    seleccionados.forEach((item, index) => {
-        totalMulta += item.multa;
-        totalMeses += item.meses;
+    selected.forEach((s, i) => {
+        totalMulta += s.multa;
+        totalMeses += s.meses;
         
-        const div = document.createElement('div');
-        div.className = 'summary-item';
-        div.innerHTML = `
-            <span>[${item.id}] ${item.titulo}</span>
-            <span style="color:var(--danger); cursor:pointer; font-weight:bold" onclick="quitarCargo(${index})"><i class="fas fa-times"></i></span>
-        `;
-        contenedor.appendChild(div);
+        sumDiv.innerHTML += `
+            <div class="summary-item">
+                <span>[${s.id}] ${s.titulo}</span>
+                <span onclick="del(${i})" style="color:var(--danger); cursor:pointer; font-weight:bold;">✕</span>
+            </div>`;
     });
 
-    document.getElementById('totalFine').textContent = totalMulta.toLocaleString() + '€';
+    // Actualizar Textos Totales
+    document.getElementById('tFine').innerText = totalMulta.toLocaleString() + "€";
     
-    // Calculo tiempo total
-    let textoTiempo = "0 Meses";
-    if (totalMeses >= 900) {
-        textoTiempo = "CADENA PERPETUA";
-        document.getElementById('totalJail').style.color = "#ff0000";
-    } else if (totalMeses >= 12) {
-        const anios = Math.floor(totalMeses / 12);
-        const mesesRestantes = totalMeses % 12;
-        textoTiempo = `${anios} Años`;
-        if (mesesRestantes > 0) textoTiempo += ` y ${mesesRestantes} Meses`;
-        document.getElementById('totalJail').style.color = "var(--danger)";
+    let textoTiempo = "0m";
+    if (totalMeses >= 900) textoTiempo = "PERPETUA";
+    else if (totalMeses >= 12) {
+        const a = Math.floor(totalMeses / 12);
+        const m = totalMeses % 12;
+        textoTiempo = `${a} Años` + (m > 0 ? ` y ${m} Meses` : "");
     } else {
-        textoTiempo = totalMeses + ' Meses';
-        document.getElementById('totalJail').style.color = "var(--danger)";
+        textoTiempo = totalMeses + " Meses";
     }
-    document.getElementById('totalJail').textContent = textoTiempo;
+    document.getElementById('tJail').innerText = textoTiempo;
 }
 
-function copyReport() {
-    if (seleccionados.length === 0) return alert("Selecciona cargos primero.");
-    const detenido = document.getElementById('detenidoInput').value || "Desconocido";
-    const detalles = document.getElementById('detallesInput').value || "Sin detalles.";
-    
-    let texto = `**INFORME POLICIAL**\n👤 **Detenido:** ${detenido}\n\n`;
-    seleccionados.forEach(s => texto += `• [${s.id}] ${s.titulo} (${s.multa.toLocaleString()}€)\n`);
-    texto += `\n📝 **Detalles:** ${detalles}`;
-    texto += `\n💰 **TOTAL:** ${document.getElementById('totalFine').textContent}`;
-    texto += `\n⚖️ **PENAL:** ${document.getElementById('totalJail').textContent}`;
+// Copiar al portapapeles
+function copy() {
+    if(selected.length === 0) return alert("Selecciona cargos.");
+    const name = document.getElementById('detName').value || "Desconocido";
+    const details = document.getElementById('detDetails').value;
 
-    navigator.clipboard.writeText(texto);
-    alert("Informe copiado al portapapeles.");
+    let text = `**INFORME POLICIAL**\n👤 **Detenido:** ${name}\n\n`;
+    selected.forEach(s => text += `• [${s.id}] ${s.titulo} (${s.multa}€)\n`);
+    text += `\n💰 **TOTAL:** ${document.getElementById('tFine').innerText}`;
+    text += `\n⚖️ **PENAL:** ${document.getElementById('tJail').innerText}`;
+    if(details) text += `\n📝 **Detalles:** ${details}`;
+
+    navigator.clipboard.writeText(text);
+    alert("Copiado!");
 }
 
-function enviarInforme(tipo) {
-    const detenido = document.getElementById('detenidoInput').value;
-    const discordDetenidoID = document.getElementById('discordDetenidoInput').value;
-    const detalles = document.getElementById('detallesInput').value;
+// Enviar a Discord (Webhook)
+function send(type) {
+    const name = document.getElementById('detName').value;
+    const disc = document.getElementById('detDiscord').value;
+    const details = document.getElementById('detDetails').value;
+
+    if(!name) return alert("Falta el nombre del detenido.");
+    if(selected.length === 0) return alert("Faltan cargos.");
     
-    if (seleccionados.length === 0) return alert("❌ Debes seleccionar al menos un cargo.");
-    if (!detenido) return alert("❌ Debes escribir el nombre del ciudadano.");
+    // Seleccionar URL según botón
+    let url = "";
+    let color = 0;
+    let title = "";
 
-    // Configuración según el botón pulsado
-    let webhookURL = "";
-    let colorEmbed = 0;
-    let tituloEmbed = "";
-
-    if (tipo === 'multa') {
-        webhookURL = WEBHOOK_MULTAS;
-        colorEmbed = 15844367; // Amarillo
-        tituloEmbed = "📜 BOLETÍN DE DENUNCIA (MULTA)";
-    } else if (tipo === 'arresto') {
-        webhookURL = WEBHOOK_ARRESTOS;
-        colorEmbed = 15105570; // Naranja/Rojo
-        tituloEmbed = "🚔 INFORME DE ARRESTO";
-    } else if (tipo === 'denuncia') {
-        webhookURL = WEBHOOK_DENUNCIAS;
-        colorEmbed = 10181046; // Morado
-        tituloEmbed = "⚖️ DENUNCIA CIUDADANA / JUZGADO";
+    if(type === 'multa') { 
+        url = WEBHOOK_MULTAS; 
+        color = 15844367; // Amarillo
+        title = "📜 BOLETÍN DE DENUNCIA";
+    }
+    if(type === 'arresto') { 
+        url = WEBHOOK_ARRESTOS; 
+        color = 15105570; // Naranja
+        title = "🚔 INFORME DE ARRESTO";
+    }
+    if(type === 'denuncia') { 
+        url = WEBHOOK_DENUNCIAS; 
+        color = 10181046; // Morado
+        title = "⚖️ DENUNCIA JUZGADO";
     }
 
-    if (!webhookURL || webhookURL.includes("PEGA_AQUI")) return alert("⚠️ Error: Configura las Webhooks en config.js");
+    if(!url || url.includes("PEGA_")) return alert("Error: Webhook no configurada en config.js");
 
-    const oficial = JSON.parse(sessionStorage.getItem('oficialLogueado'));
+    // Obtener oficial de la sesión
+    const user = JSON.parse(sessionStorage.getItem('oficialLogueado')) || { rango: "Agente", placa: "Desc.", discordId: "" };
     
-    // --- LÓGICA DE PINGS (MENCIONES) ---
-    // 1. Oficial
-    let oficialTexto = `**${oficial.rango} ${oficial.placa}**`;
-    if (oficial.discordId) {
-        oficialTexto += `\n<@${oficial.discordId}>`;
-    }
-
-    // 2. Detenido
-    let detenidoTexto = `**${detenido}**`;
-    if (discordDetenidoID) {
-        detenidoTexto += `\n<@${discordDetenidoID}>`;
-    }
-    // -----------------------------------
-
-    let description = seleccionados.map(s => {
-        let tiempo = s.meses > 0 ? (s.meses >= 12 ? (s.meses/12).toFixed(1) + " Años" : s.meses + " Meses") : "Sin cárcel";
-        if(s.meses >= 900) tiempo = "Perpetua";
-        return `• **[${s.id}] ${s.titulo}**\n   └ ${s.multa.toLocaleString()}€ | ${tiempo}`;
+    // Formatear descripción de cargos
+    let desc = selected.map(s => {
+        let t = s.meses > 0 ? (s.meses >= 12 ? (s.meses/12).toFixed(1)+"a" : s.meses+"m") : "0m";
+        if(s.meses >= 900) t = "Perp.";
+        return `• **[${s.id}] ${s.titulo}**\n   └ ${s.multa}€ | ${t}`;
     }).join("\n");
 
+    // Formatear menciones (Pings)
+    let oficialStr = `${user.rango} ${user.placa}`;
+    if(user.discordId) oficialStr += ` <@${user.discordId}>`;
+
+    let detStr = `**${name}**`;
+    if(disc) detStr += ` <@${disc}>`;
+
     const embed = {
-        title: tituloEmbed,
-        color: colorEmbed,
+        title: title,
+        color: color,
         fields: [
-            { name: "👮 Oficial al mando", value: oficialTexto, inline: true },
-            { name: "👤 Ciudadano", value: detenidoTexto, inline: true },
-            { name: "📋 Cargos Imputados", value: description },
-            { name: "💵 Sanción Total", value: document.getElementById('totalFine').textContent, inline: true },
-            { name: "⛓️ Pena Total", value: document.getElementById('totalJail').textContent, inline: true },
+            { name: "👮 Oficial", value: oficialStr, inline: true },
+            { name: "👤 Ciudadano", value: detStr, inline: true },
+            { name: "📋 Cargos", value: desc },
+            { name: "💵 Total Multa", value: document.getElementById('tFine').innerText, inline: true },
+            { name: "⛓️ Total Pena", value: document.getElementById('tJail').innerText, inline: true }
         ],
-        footer: { text: "Sistema MDT - Gobierno de España" },
+        footer: { text: "Sistema MDT Nacional" },
         timestamp: new Date()
     };
 
-    if (detalles) {
-        embed.fields.push({ name: "📝 Detalles / Pruebas", value: detalles });
-    }
+    if(details) embed.fields.push({ name: "📝 Detalles", value: details });
 
-    fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ embeds: [embed] })
-    }).then(response => {
-        if (response.ok) {
-            alert(`✅ ${tipo.toUpperCase()} enviado correctamente.`);
+    fetch(url, { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ embeds: [embed] }) 
+    })
+    .then(res => {
+        if(res.ok) {
+            alert("✅ Informe enviado correctamente.");
             clearAll();
-            // Limpiamos también el input del ID
-            document.getElementById('discordDetenidoInput').value = ""; 
         } else {
-            alert("❌ Error al enviar a Discord. Revisa la Webhook.");
+            alert("❌ Error al enviar a Discord.");
         }
     });
 }
