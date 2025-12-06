@@ -7,7 +7,6 @@ const WEBHOOK_DENUNCIAS = "https://discord.com/api/webhooks/1446935508176474132/
 
 // 2. LISTA DE AGENTES AUTORIZADOS
 const AGENTES = [
-    { placa: "CNP-001", pass: "admin", rango: "Comisario" },
-    { placa: "GC-055", pass: "1234", rango: "Agente" },
+    { placa: "CF-001", pass: "Jorge0124", rango: "Co-Fundador"}
     // Añade más agentes copiando la línea de arriba
 ];
