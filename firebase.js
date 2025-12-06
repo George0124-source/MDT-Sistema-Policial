@@ -16,12 +16,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Hacemos estas funciones globales para que funcionen siempre
-window.db = db;
-window.collection = collection;
-window.addDoc = addDoc;
-window.getDocs = getDocs;
-window.query = query;
-window.where = where;
-
-export { db };
+// Exportamos para que los otros archivos puedan usarlo
+export { db, collection, addDoc, getDocs, query, where };
