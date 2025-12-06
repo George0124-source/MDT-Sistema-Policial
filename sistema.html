@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDT - Sistema Integral</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
+    <!-- Barra de Navegación -->
     <nav class="navbar">
         <div class="nav-brand">MDT GUBERNAMENTAL</div>
         <div class="nav-user">
@@ -18,16 +20,18 @@
     </nav>
 
     <div class="main-container">
-        <!-- Panel Izquierdo: Buscador -->
+        <!-- Panel Izquierdo: Buscador y Lista -->
         <div class="panel left">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar código penal (Ej: Homicidio)...">
+                <input type="text" id="searchInput" placeholder="Buscar código penal (Ej: Homicidio, 2.3)...">
                 <i class="fas fa-search"></i>
             </div>
-            <div id="articlesList" class="list-container"></div>
+            <div id="articlesList" class="list-container">
+                <!-- Aquí se cargan las leyes con JS -->
+            </div>
         </div>
 
-        <!-- Panel Derecho: Calculadora -->
+        <!-- Panel Derecho: Informe -->
         <div class="panel right">
             <div class="report-header">
                 <h3><i class="fas fa-clipboard-list"></i> TRÁMITE PENAL</h3>
@@ -38,6 +42,7 @@
             </div>
 
             <div class="report-footer">
+                <!-- Totales -->
                 <div class="total-row">
                     <span>SANCIÓN ECONÓMICA:</span>
                     <span id="totalFine" class="amount">0€</span>
@@ -47,9 +52,16 @@
                     <span id="totalJail" class="jail-time">0 meses</span>
                 </div>
                 
+                <!-- Inputs del Detenido -->
                 <div class="input-group">
                     <label>Nombre del Ciudadano / Detenido:</label>
-                    <input type="text" id="detenidoInput" placeholder="Nombre y Apellidos">
+                    <input type="text" id="detenidoInput" placeholder="Nombre y Apellidos (IC)">
+                </div>
+
+                <!-- NUEVO: Input para ID de Discord del detenido -->
+                <div class="input-group">
+                    <label>ID Discord del Detenido (Para mención/ping):</label>
+                    <input type="text" id="discordDetenidoInput" placeholder="Ej: 39564821054862 (Opcional)">
                 </div>
 
                 <div class="input-group">
@@ -57,10 +69,11 @@
                     <textarea id="detallesInput" placeholder="Escribe aquí notas adicionales, matrícula, link a pruebas..."></textarea>
                 </div>
 
+                <!-- Botones de Acción -->
                 <div class="action-buttons-grid">
                     <button onclick="clearAll()" class="btn btn-red">Borrar</button>
-                    <button onclick="copyReport()" class="btn btn-blue">Copiar</button>
-                    <!-- LOS 3 BOTONES DE ENVÍO -->
+                    <button onclick="copyReport()" class="btn btn-blue">Copiar Texto</button>
+                    <!-- Botones de Envío a Discord -->
                     <button onclick="enviarInforme('multa')" class="btn btn-yellow"><i class="fas fa-file-invoice-dollar"></i> MULTA</button>
                     <button onclick="enviarInforme('arresto')" class="btn btn-orange"><i class="fas fa-handcuffs"></i> ARRESTO</button>
                     <button onclick="enviarInforme('denuncia')" class="btn btn-purple"><i class="fas fa-bullhorn"></i> DENUNCIA</button>
@@ -69,13 +82,22 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="config.js"></script>
     <script src="app.js"></script>
     <script>
+        // Lógica de seguridad simple
         const user = JSON.parse(sessionStorage.getItem('oficialLogueado'));
-        if (!user) window.location.href = 'index.html';
-        document.getElementById('nombreOficial').textContent = `${user.rango} ${user.placa}`;
-        function logout() { sessionStorage.removeItem('oficialLogueado'); window.location.href = 'index.html'; }
+        if (!user) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('nombreOficial').textContent = `${user.rango} ${user.placa}`;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('oficialLogueado');
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>
