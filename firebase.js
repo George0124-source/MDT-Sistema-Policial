@@ -13,9 +13,15 @@ const firebaseConfig = {
   appId: "1:525461846922:web:1a038550dd2d15da6c6673"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Exportar funciones para usarlas en otros archivos
-export { db, collection, addDoc, getDocs, query, where };
+// Hacemos estas funciones globales para que funcionen siempre
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.getDocs = getDocs;
+window.query = query;
+window.where = where;
+
+export { db };
