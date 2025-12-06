@@ -2,12 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Base de Datos Policial</title>
+    <title>Buscar</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .dni-card { background: #222; padding: 20px; display: flex; gap: 20px; border: 1px solid #444; margin-top: 20px; }
-        .dni-photo { width: 120px; height: 150px; background: #333; object-fit: cover; }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -15,43 +11,29 @@
         <button onclick="location.href='menu.html'" class="btn-logout">Volver</button>
     </nav>
     <div class="main-container">
-        <h2>BÚSQUEDA DE CIUDADANOS</h2>
+        <h3>BASE DE DATOS</h3>
         <div class="search-box">
-            <input type="text" id="inputBusqueda" placeholder="DNI exacto...">
+            <input type="text" id="busqueda" placeholder="DNI exacto...">
             <button class="btn-blue" onclick="buscar()">BUSCAR</button>
         </div>
-        <div id="resultado"></div>
+        <div id="res"></div>
     </div>
-
     <script type="module">
-        import { db, collection, getDocs, query, where } from './firebase.js';
+        import { db } from './firebase.js';
+        import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         window.buscar = async function() {
-            const val = document.getElementById('inputBusqueda').value;
-            if(!val) return;
-            
+            const val = document.getElementById('busqueda').value;
             const q = query(collection(db, "ciudadanos"), where("dni", "==", val));
             const snap = await getDocs(q);
-            
-            const resDiv = document.getElementById('resultado');
-            resDiv.innerHTML = "";
-
+            const div = document.getElementById('res');
+            div.innerHTML = "";
             if(snap.empty) {
-                resDiv.innerHTML = "<p>No hay registros con ese DNI.</p>";
+                div.innerHTML = "<p>Sin resultados.</p>";
             } else {
                 snap.forEach(doc => {
                     const d = doc.data();
-                    resDiv.innerHTML = `
-                        <div class="dni-card">
-                            <img src="${d.foto}" class="dni-photo">
-                            <div>
-                                <h2 style="margin-top:0; color:var(--accent)">${d.nombre}</h2>
-                                <p><strong>DNI:</strong> ${d.dni}</p>
-                                <p><strong>Nacimiento:</strong> ${d.nac}</p>
-                                <p><strong>Género:</strong> ${d.gen}</p>
-                            </div>
-                        </div>
-                    `;
+                    div.innerHTML = `<div class="dni-card-visual"><img src="${d.foto}" class="dni-photo"><div><h3>${d.nombre}</h3><p>DNI: ${d.dni}</p><p>${d.nac} - ${d.gen}</p></div></div>`;
                 });
             }
         }
