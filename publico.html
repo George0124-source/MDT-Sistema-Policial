@@ -5,136 +5,127 @@
     <title>Sede Ciudadanos</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .tab-btn { padding: 10px; background: #333; color: white; border: none; cursor: pointer; margin-right: 5px; }
-        .tab-btn.active { background: var(--accent); }
-        .tab-content { display: none; margin-top: 20px; }
-        .tab-content.active { display: block; }
-        .dni-card { background: white; color: black; padding: 20px; border-radius: 10px; display: flex; gap: 20px; max-width: 400px; margin-top: 20px; }
-        .dni-photo { width: 100px; height: 120px; background: #ddd; object-fit: cover; }
-    </style>
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">GOBIERNO DE ESPAÑA</div>
-        <button onclick="location.href='index.html'" class="btn-logout">Acceso Policía</button>
+        <div class="nav-brand">GOBIERNO - CIUDADANÍA</div>
+        <button onclick="location.href='index.html'" class="btn-logout">Policía</button>
     </nav>
 
-    <div class="main-container" style="max-width: 800px; margin: 0 auto;">
-        <div>
-            <button class="tab-btn active" onclick="verTab('ver')">CONSULTAR DNI</button>
-            <button class="tab-btn" onclick="verTab('crear')">CREAR DNI</button>
-            <button class="tab-btn" onclick="verTab('reclamar')" style="background:#c0392b">PERDÍ MI DNI</button>
+    <div class="main-container">
+        <!-- Botones Pestañas -->
+        <div style="display:flex; margin-bottom:20px;">
+            <button class="tab-btn active" onclick="openTab('ver')">CONSULTAR DNI</button>
+            <button class="tab-btn" onclick="openTab('crear')">CREAR DNI</button>
+            <button class="tab-btn" onclick="openTab('reclamar')" style="background:#c0392b">PERDÍ MI DNI</button>
         </div>
 
-        <!-- 1. VER DNI -->
+        <!-- Pestaña VER -->
         <div id="tab-ver" class="tab-content active">
             <div class="panel">
-                <h3>CONSULTAR DOCUMENTACIÓN</h3>
-                <div class="search-box">
-                    <input type="text" id="verDNI" placeholder="Tu número de DNI">
-                    <button class="btn-blue" onclick="buscarDNI()">VER</button>
-                </div>
-                <div id="resDNI"></div>
+                <h3>VER MI DNI</h3>
+                <input type="text" id="verDNIInput" placeholder="Tu DNI exacto...">
+                <button class="btn-blue" onclick="buscarDNI()">BUSCAR</button>
+                <div id="resultadoDNI"></div>
             </div>
         </div>
 
-        <!-- 2. CREAR DNI -->
+        <!-- Pestaña CREAR -->
         <div id="tab-crear" class="tab-content">
             <div class="panel">
                 <h3>NUEVO REGISTRO</h3>
-                <div class="input-group"><label>Nombre</label><input type="text" id="crearNombre"></div>
-                <div class="input-group"><label>DNI Deseado</label><input type="text" id="crearDNI"></div>
-                <div class="input-group"><label>Nacimiento</label><input type="date" id="crearNac"></div>
-                <div class="input-group"><label>Foto URL</label><input type="text" id="crearFoto"></div>
-                <div class="input-group"><label>Género</label>
-                    <select id="crearGen"><option value="H">Hombre</option><option value="M">Mujer</option></select>
-                </div>
-                <button class="btn-login" style="background:var(--success)" onclick="guardarDNI()">REGISTRAR</button>
+                <input type="text" id="newNombre" placeholder="Nombre y Apellidos">
+                <input type="text" id="newDNI" placeholder="DNI Deseado">
+                <input type="date" id="newNac">
+                <input type="text" id="newFoto" placeholder="URL Foto (Imgur/Discord)">
+                <select id="newGen"><option value="H">Hombre</option><option value="M">Mujer</option></select>
+                <button class="btn-login" style="background:var(--success)" onclick="guardarDNI()">REGISTRARSE</button>
             </div>
         </div>
 
-        <!-- 3. RECLAMAR -->
+        <!-- Pestaña RECLAMAR -->
         <div id="tab-reclamar" class="tab-content">
             <div class="panel">
-                <h3 style="color:#c0392b">SOLICITAR AYUDA (STAFF)</h3>
-                <p>Usa esto si perdiste tu DNI.</p>
-                <div class="input-group"><label>Nombre</label><input type="text" id="recNombre"></div>
-                <div class="input-group"><label>Motivo</label><textarea id="recMotivo"></textarea></div>
-                <button class="btn-login" style="background:#e67e22" onclick="enviarAviso()">ENVIAR AVISO</button>
+                <h3 style="color:#c0392b">REPORTAR DNI PERDIDO</h3>
+                <input type="text" id="recNombre" placeholder="Tu Nombre">
+                <textarea id="recMotivo" placeholder="Motivo (CK, Robo, Error...)"></textarea>
+                <button class="btn-login" style="background:#e67e22" onclick="enviarReporte()">ENVIAR A STAFF</button>
             </div>
         </div>
     </div>
 
-    <script src="config.js"></script>
+    <!-- CARGAMOS SCRIPT MODULO -->
     <script type="module">
-        import { db, collection, addDoc, getDocs, query, where } from './firebase.js';
+        import { db } from './firebase.js';
+        import { collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Hacer funciones globales para que los botones funcionen
-        window.verTab = function(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-'+id).classList.add('active');
+        // --- FUNCIONES GLOBALES (Para que los botones HTML funcionen) ---
+        
+        window.openTab = function(id) {
+            document.querySelectorAll('.tab-content').forEach(d => d.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-'+id).style.display = 'block';
         }
 
         window.guardarDNI = async function() {
-            const nombre = document.getElementById('crearNombre').value;
-            const dni = document.getElementById('crearDNI').value;
-            const foto = document.getElementById('crearFoto').value;
-            const nac = document.getElementById('crearNac').value;
-            const gen = document.getElementById('crearGen').value;
+            const nombre = document.getElementById('newNombre').value;
+            const dni = document.getElementById('newDNI').value;
+            const foto = document.getElementById('newFoto').value;
+            const nac = document.getElementById('newNac').value;
+            const gen = document.getElementById('newGen').value;
 
-            if(!nombre || !dni) return alert("Nombre y DNI son obligatorios");
+            if(!nombre || !dni) return alert("Faltan datos.");
 
+            // Comprobar si existe
             const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
-            const check = await getDocs(q);
-            if(!check.empty) return alert("¡Ese DNI ya existe!");
+            const snap = await getDocs(q);
+            if(!snap.empty) return alert("¡Ese DNI ya está cogido!");
 
             try {
                 await addDoc(collection(db, "ciudadanos"), { nombre, dni, foto, nac, gen });
-                alert("✅ DNI Creado.");
+                alert("✅ DNI Creado Correctamente");
                 location.reload();
-            } catch(e) { alert("Error al guardar."); }
+            } catch(e) { console.error(e); alert("Error de base de datos"); }
         }
 
         window.buscarDNI = async function() {
-            const dni = document.getElementById('verDNI').value;
+            const dni = document.getElementById('verDNIInput').value;
             if(!dni) return;
             const q = query(collection(db, "ciudadanos"), where("dni", "==", dni));
             const snap = await getDocs(q);
+            
+            const div = document.getElementById('resultadoDNI');
             if(snap.empty) {
-                document.getElementById('resDNI').innerHTML = "<p>No encontrado</p>";
+                div.innerHTML = "<p>No encontrado.</p>";
             } else {
                 snap.forEach(doc => {
                     const d = doc.data();
-                    document.getElementById('resDNI').innerHTML = `
-                        <div class="dni-card">
-                            <img src="${d.foto}" class="dni-photo">
+                    div.innerHTML = `
+                        <div class="dni-card-visual">
+                            <img src="${d.foto || ''}" class="dni-photo">
                             <div>
                                 <h3>${d.nombre}</h3>
-                                <p>DNI: ${d.dni}</p>
+                                <p><strong>DNI:</strong> ${d.dni}</p>
                                 <p>Nacimiento: ${d.nac}</p>
                                 <p>Género: ${d.gen}</p>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                 });
             }
         }
-
-        window.enviarAviso = function() {
-            const nombre = document.getElementById('recNombre').value;
-            const motivo = document.getElementById('recMotivo').value;
-            if(!nombre) return alert("Pon tu nombre.");
-
-            const embed = {
-                title: "🚨 RECLAMACIÓN DNI",
-                color: 15158332,
-                fields: [{name:"Nombre", value:nombre}, {name:"Motivo", value:motivo}]
-            };
+    </script>
+    <script src="config.js"></script>
+    <script>
+        // Funcion normal para el reporte (no necesita firebase)
+        window.enviarReporte = function() {
+            const nom = document.getElementById('recNombre').value;
+            const mot = document.getElementById('recMotivo').value;
+            if(!nom) return alert("Pon tu nombre.");
+            
+            const embed = { title:"🚨 DNI PERDIDO", color:15158332, fields:[{name:"Nombre",value:nom},{name:"Motivo",value:mot}] };
             fetch(WEBHOOK_STAFF, {
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({embeds:[embed]})
+                method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({embeds:[embed]})
             }).then(() => alert("Aviso enviado."));
         }
     </script>
