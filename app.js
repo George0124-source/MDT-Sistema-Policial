@@ -166,7 +166,7 @@ const codigoPenal = [
 ];
 
 // ==========================================
-// LÓGICA DEL SISTEMA (NO TOCAR ABAJO)
+// LÓGICA DEL SISTEMA
 // ==========================================
 let seleccionados = [];
 
@@ -222,6 +222,7 @@ function clearAll() {
     seleccionados = [];
     document.getElementById('detenidoInput').value = "";
     document.getElementById('detallesInput').value = "";
+    document.getElementById('discordDetenidoInput').value = "";
     actualizarResumen();
 }
 
@@ -286,6 +287,7 @@ function copyReport() {
 
 function enviarInforme(tipo) {
     const detenido = document.getElementById('detenidoInput').value;
+    const discordDetenidoID = document.getElementById('discordDetenidoInput').value;
     const detalles = document.getElementById('detallesInput').value;
     
     if (seleccionados.length === 0) return alert("❌ Debes seleccionar al menos un cargo.");
@@ -314,6 +316,20 @@ function enviarInforme(tipo) {
 
     const oficial = JSON.parse(sessionStorage.getItem('oficialLogueado'));
     
+    // --- LÓGICA DE PINGS (MENCIONES) ---
+    // 1. Oficial
+    let oficialTexto = `**${oficial.rango} ${oficial.placa}**`;
+    if (oficial.discordId) {
+        oficialTexto += `\n<@${oficial.discordId}>`;
+    }
+
+    // 2. Detenido
+    let detenidoTexto = `**${detenido}**`;
+    if (discordDetenidoID) {
+        detenidoTexto += `\n<@${discordDetenidoID}>`;
+    }
+    // -----------------------------------
+
     let description = seleccionados.map(s => {
         let tiempo = s.meses > 0 ? (s.meses >= 12 ? (s.meses/12).toFixed(1) + " Años" : s.meses + " Meses") : "Sin cárcel";
         if(s.meses >= 900) tiempo = "Perpetua";
@@ -324,8 +340,8 @@ function enviarInforme(tipo) {
         title: tituloEmbed,
         color: colorEmbed,
         fields: [
-            { name: "👮 Oficial al mando", value: `${oficial.rango} ${oficial.placa}`, inline: true },
-            { name: "👤 Ciudadano", value: detenido, inline: true },
+            { name: "👮 Oficial al mando", value: oficialTexto, inline: true },
+            { name: "👤 Ciudadano", value: detenidoTexto, inline: true },
             { name: "📋 Cargos Imputados", value: description },
             { name: "💵 Sanción Total", value: document.getElementById('totalFine').textContent, inline: true },
             { name: "⛓️ Pena Total", value: document.getElementById('totalJail').textContent, inline: true },
@@ -346,6 +362,8 @@ function enviarInforme(tipo) {
         if (response.ok) {
             alert(`✅ ${tipo.toUpperCase()} enviado correctamente.`);
             clearAll();
+            // Limpiamos también el input del ID
+            document.getElementById('discordDetenidoInput').value = ""; 
         } else {
             alert("❌ Error al enviar a Discord. Revisa la Webhook.");
         }
