@@ -2,43 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MDT Penal</title>
+    <title>MDT</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">MDT GUBERNAMENTAL</div>
+        <div class="nav-brand">MDT PENAL</div>
         <button onclick="location.href='menu.html'" class="btn-logout">Volver</button>
     </nav>
-    <div class="main-container" style="display:flex; gap:20px;">
-        <div class="panel left">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar cargo...">
-            </div>
-            <div id="articlesList" class="list-container"></div>
+    <div class="main-container mdt-layout">
+        <div class="left-col">
+            <input type="text" id="search" placeholder="Buscar ley...">
+            <div id="list"></div>
         </div>
-        <div class="panel right">
-            <h3>TRÁMITE PENAL</h3>
-            <div id="summaryList" class="summary-list"></div>
-            <div class="total-row"><span>MULTA:</span> <span id="totalFine">0€</span></div>
-            <div class="total-row"><span>CÁRCEL:</span> <span id="totalJail">0 meses</span></div>
-            
-            <div class="input-group">
-                <input type="text" id="detenidoInput" placeholder="Nombre Detenido">
-            </div>
-            <div class="input-group">
-                <input type="text" id="discordDetenidoInput" placeholder="ID Discord (Opcional)">
-            </div>
-            <div class="input-group">
-                <textarea id="detallesInput" placeholder="Detalles..."></textarea>
-            </div>
-            <div class="action-buttons-grid">
-                <button onclick="clearAll()" class="btn-red">Borrar</button>
-                <button onclick="copyReport()" class="btn-blue">Copiar</button>
-                <button onclick="enviarInforme('multa')" class="btn-yellow">MULTA</button>
-                <button onclick="enviarInforme('arresto')" class="btn-orange">ARRESTO</button>
-                <button onclick="enviarInforme('denuncia')" class="btn-purple">DENUNCIA</button>
+        <div class="right-col panel">
+            <h3>INFORME</h3>
+            <div id="summ"></div>
+            <p>Multa: <strong id="tFine">0€</strong></p>
+            <p>Cárcel: <strong id="tJail">0m</strong></p>
+            <input type="text" id="detName" placeholder="Detenido">
+            <input type="text" id="detDiscord" placeholder="ID Discord">
+            <textarea id="detDetails" placeholder="Detalles"></textarea>
+            <div class="action-grid">
+                <button class="btn-red" onclick="clearAll()">Borrar</button>
+                <button class="btn-blue" onclick="copy()">Copiar</button>
+                <button class="btn-yellow" onclick="send('multa')">MULTA</button>
+                <button class="btn-orange" onclick="send('arresto')">ARRESTO</button>
+                <button class="btn-purple" onclick="send('denuncia')">DENUNCIA</button>
             </div>
         </div>
     </div>
