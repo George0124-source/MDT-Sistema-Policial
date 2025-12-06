@@ -12,15 +12,15 @@
     </nav>
     <div class="main-container">
         <h3>BASE DE DATOS</h3>
-        <div class="search-box">
+        <div style="display:flex; gap:10px;">
             <input type="text" id="busqueda" placeholder="DNI exacto...">
-            <button class="btn-blue" onclick="buscar()">BUSCAR</button>
+            <button class="btn-blue" style="width:auto;" onclick="window.buscar()">BUSCAR</button>
         </div>
         <div id="res"></div>
     </div>
+
     <script type="module">
-        import { db } from './firebase.js';
-        import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { db, collection, getDocs, query, where } from './firebase.js';
         
         window.buscar = async function() {
             const val = document.getElementById('busqueda').value;
