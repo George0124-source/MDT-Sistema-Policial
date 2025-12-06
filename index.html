@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Restringido - CNP/GC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <div class="login-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" alt="Bandera España" class="flag-icon">
+            <h2>ACCESO CENTRAL</h2>
+            <p>Ministerio del Interior</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label>NÚMERO DE PLACA</label>
+                <input type="text" id="badge" placeholder="Ej: CNP-001" required>
+            </div>
+            
+            <div class="input-group">
+                <label>CONTRASEÑA</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-login">INICIAR SESIÓN</button>
+            <p id="errorMsg" class="error-msg"></p>
+        </form>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        // Lógica simple de Login conectada a config.js
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const badge = document.getElementById('badge').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Buscamos si la placa existe y la contraseña coincide
+            const oficial = AGENTES.find(u => u.placa === badge && u.pass === pass);
+
+            if (oficial) {
+                // Guardamos la sesión
+                sessionStorage.setItem('oficialLogueado', JSON.stringify(oficial));
+                window.location.href = 'sistema.html';
+            } else {
+                errorMsg.textContent = "ACCESO DENEGADO: Credenciales inválidas.";
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

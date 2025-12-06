@@ -1,0 +1,78 @@
+:root {
+    --cnp-blue: #002D62;
+    --dark-bg: #121212;
+    --panel-bg: #1E1E1E;
+    --text-main: #E0E0E0;
+    --accent: #007bff;
+    --danger: #dc3545;
+    --success: #28a745;
+}
+
+body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: var(--dark-bg); color: var(--text-main); }
+.login-body { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #001f3f 0%, #000000 100%); }
+
+/* LOGIN */
+.login-container { background: var(--panel-bg); padding: 40px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid var(--cnp-blue); }
+.flag-icon { height: 30px; margin-bottom: 10px; }
+.input-group { text-align: left; margin-bottom: 15px; }
+.input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; font-weight: bold; }
+input { width: 100%; padding: 10px; background: #2b2b2b; border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; }
+input:focus { border-color: var(--accent); outline: none; }
+.btn-login { width: 100%; padding: 12px; background: var(--cnp-blue); color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+.btn-login:hover { background: #004494; }
+.error-msg { color: var(--danger); font-size: 12px; display: none; margin-top: 10px; }
+
+/* SISTEMA */
+.navbar { background: var(--cnp-blue); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.nav-brand { font-weight: 900; letter-spacing: 1px; font-size: 18px; }
+.btn-logout { background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 15px; cursor: pointer; border-radius: 4px; }
+
+.main-container { display: flex; height: calc(100vh - 60px); padding: 20px; gap: 20px; box-sizing: border-box; }
+.panel { background: var(--panel-bg); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+.left { flex: 2; border-right: 1px solid #333; }
+.right { flex: 1; padding: 20px; }
+
+.search-box { padding: 15px; border-bottom: 1px solid #333; position: relative; }
+.search-box i { position: absolute; right: 25px; top: 25px; color: #666; }
+
+.list-container { overflow-y: auto; flex: 1; padding: 10px; }
+.article-item { background: #252525; padding: 12px; margin-bottom: 8px; border-left: 3px solid var(--accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+.article-item:hover { background: #2f2f2f; }
+.price-tag { color: var(--success); font-weight: bold; font-family: monospace; }
+
+.summary-list { flex: 1; overflow-y: auto; margin-bottom: 20px; border: 1px solid #333; border-radius: 4px; padding: 10px; background: #181818; }
+.summary-item { display: flex; justify-content: space-between; font-size: 13px; border-bottom: 1px solid #333; padding: 5px 0; }
+
+.report-footer { background: #252525; padding: 15px; border-radius: 8px; }
+.total-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; }
+.amount { color: var(--success); font-size: 18px; }
+.jail-time { color: var(--danger); }
+
+.action-buttons { display: flex; gap: 5px; margin-top: 15px; }
+.btn { flex: 1; padding: 10px; border: none; color: white; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 12px; }
+.btn-red { background: #c0392b; }
+.btn-discord { background: #5865F2; }
+.btn-blue { background: #2980b9; }
+.btn:hover { filter: brightness(1.1); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+.input-group textarea {
+    width: 100%; padding: 10px; background: #2b2b2b; border: 1px solid #444; color: white; border-radius: 4px; resize: vertical; height: 60px;
+}
+
+.action-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+/* Hacemos que los botones de envío ocupen todo el ancho en la fila de abajo */
+.action-buttons-grid button:nth-child(n+3) { grid-column: span 2; }
+.action-buttons-grid button:nth-child(n+4) { grid-column: span 1; } /* Ajuste visual */
+
+.btn-yellow { background: #f1c40f; color: #000; } /* Multa */
+.btn-orange { background: #e67e22; } /* Arresto */
+.btn-purple { background: #9b59b6; } /* Denuncia */

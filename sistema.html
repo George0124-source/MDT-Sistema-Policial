@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDT - Sistema Integral</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">MDT GUBERNAMENTAL</div>
+        <div class="nav-user">
+            <span id="nombreOficial">Agente</span>
+            <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Panel Izquierdo: Buscador -->
+        <div class="panel left">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar código penal (Ej: Homicidio)...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div id="articlesList" class="list-container"></div>
+        </div>
+
+        <!-- Panel Derecho: Calculadora -->
+        <div class="panel right">
+            <div class="report-header">
+                <h3><i class="fas fa-clipboard-list"></i> TRÁMITE PENAL</h3>
+            </div>
+            
+            <div id="summaryList" class="summary-list">
+                <p class="placeholder-text">Seleccione cargos del panel izquierdo...</p>
+            </div>
+
+            <div class="report-footer">
+                <div class="total-row">
+                    <span>SANCIÓN ECONÓMICA:</span>
+                    <span id="totalFine" class="amount">0€</span>
+                </div>
+                <div class="total-row">
+                    <span>PENA PRIVATIVA:</span>
+                    <span id="totalJail" class="jail-time">0 meses</span>
+                </div>
+                
+                <div class="input-group">
+                    <label>Nombre del Ciudadano / Detenido:</label>
+                    <input type="text" id="detenidoInput" placeholder="Nombre y Apellidos">
+                </div>
+
+                <div class="input-group">
+                    <label>Detalles / Pruebas (Opcional):</label>
+                    <textarea id="detallesInput" placeholder="Escribe aquí notas adicionales, matrícula, link a pruebas..."></textarea>
+                </div>
+
+                <div class="action-buttons-grid">
+                    <button onclick="clearAll()" class="btn btn-red">Borrar</button>
+                    <button onclick="copyReport()" class="btn btn-blue">Copiar</button>
+                    <!-- LOS 3 BOTONES DE ENVÍO -->
+                    <button onclick="enviarInforme('multa')" class="btn btn-yellow"><i class="fas fa-file-invoice-dollar"></i> MULTA</button>
+                    <button onclick="enviarInforme('arresto')" class="btn btn-orange"><i class="fas fa-handcuffs"></i> ARRESTO</button>
+                    <button onclick="enviarInforme('denuncia')" class="btn btn-purple"><i class="fas fa-bullhorn"></i> DENUNCIA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script>
+        const user = JSON.parse(sessionStorage.getItem('oficialLogueado'));
+        if (!user) window.location.href = 'index.html';
+        document.getElementById('nombreOficial').textContent = `${user.rango} ${user.placa}`;
+        function logout() { sessionStorage.removeItem('oficialLogueado'); window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>
