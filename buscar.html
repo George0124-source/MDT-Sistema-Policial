@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar - CNP</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .result-card { display: none; background: #222; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #444; }
+        .dni-header { display: flex; gap: 20px; align-items: center; }
+        .dni-foto { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; border: 2px solid #666; }
+        .dni-data h2 { margin: 0; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">ORDENADOR POLICIAL</div>
+        <button onclick="location.href='menu.html'" class="btn-logout">Volver</button>
+    </nav>
+
+    <div class="main-container" style="display:block;">
+        <div class="search-box" style="max-width: 600px; margin: 0 auto;">
+            <input type="text" id="busqueda" placeholder="Introduce DNI o Nombre exacto..." style="width: 80%;">
+            <button id="btnBuscar" class="btn-blue" style="width: 18%; padding: 10px;">BUSCAR</button>
+        </div>
+
+        <div id="resultado" class="result-card" style="max-width: 600px; margin: 20px auto;">
+            <div class="dni-header">
+                <img id="resFoto" src="" class="dni-foto" alt="Foto">
+                <div class="dni-data">
+                    <h2 id="resNombre">NOMBRE</h2>
+                    <p><strong>DNI:</strong> <span id="resDNI"></span></p>
+                    <p><strong>Nacimiento:</strong> <span id="resNac"></span></p>
+                    <p><strong>Género:</strong> <span id="resGen"></span></p>
+                </div>
+            </div>
+            <hr style="border-color:#444; margin:15px 0;">
+            <p style="text-align:center; color:#888;">[BASE DE DATOS NACIONAL - CONFIDENCIAL]</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db, collection, getDocs, query, where } from './firebase.js';
+
+        document.getElementById('btnBuscar').addEventListener('click', async () => {
+            const busqueda = document.getElementById('busqueda').value;
+            if(!busqueda) return;
+
+            // BUSCAR EN GOOGLE
+            const q = query(collection(db, "ciudadanos"), where("dni", "==", busqueda));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                
+                if(querySnapshot.empty) {
+                    alert("⚠️ No se ha encontrado ningún ciudadano con ese DNI.");
+                    document.getElementById('resultado').style.display = 'none';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    document.getElementById('resultado').style.display = 'block';
+                    document.getElementById('resNombre').textContent = data.nombre.toUpperCase();
+                    document.getElementById('resDNI').textContent = data.dni;
+                    document.getElementById('resNac').textContent = data.nacimiento;
+                    document.getElementById('resGen').textContent = data.genero;
+                    document.getElementById('resFoto').src = data.foto || "https://i.imgur.com/TuFotoPorDefecto.png";
+                });
+
+            } catch (e) {
+                console.error(e);
+                alert("Error de conexión con la central.");
+            }
+        });
+    </script>
+</body>
+</html>
