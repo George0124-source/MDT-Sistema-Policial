@@ -1,169 +1,250 @@
-// =========================================================
-// 1. BASE DE DATOS DEL CÓDIGO PENAL (LEYES COMPLETAS)
-// =========================================================
-
+// ==========================================
+// CÓDIGO PENAL ACTUALIZADO
+// ==========================================
 const codigoPenal = [
-    // --- TÍTULO I: CORRUPCIÓN ---
-    { id: "1.1", titulo: "Mal uso del Código Penal", multa: 10000, meses: 1 },
-    { id: "1.2", titulo: "Corrupto en el Cuerpo de Seguridad", multa: 20000, meses: 24 }, // 2 años
-    { id: "1.3", titulo: "Corrupto dentro del Cuerpo de Juez", multa: 30000, meses: 36 }, // 3 años
-    { id: "1.4", titulo: "Corrupto dentro del Cuerpo de Abogado", multa: 25000, meses: 36 },
-    { id: "1.5", titulo: "Arresto sin motivo", multa: 15000, meses: 12 },
+    // --- CAPÍTULO I: SEGURIDAD VIAL ---
+    { id: "1.0", titulo: "No tener DNI/NIE registrado", multa: 1500, meses: 0 },
+    { id: "1.0.1", titulo: "No llevar DNI o Carnet", multa: 250, meses: 0 },
+    { id: "1.0.2", titulo: "Conducción sin Carnet", multa: 1750, meses: 0 },
+    { id: "1.0.3", titulo: "Conducción sin seguro", multa: 1750, meses: 0 },
+    { id: "1.0.4", titulo: "Carnet caducado", multa: 1250, meses: 0 },
+    { id: "1.0.5", titulo: "Seguro caducado", multa: 1250, meses: 0 },
+    { id: "1.1", titulo: "Abuso del claxon", multa: 45, meses: 0 },
+    { id: "1.2", titulo: "Pisar línea continua", multa: 65, meses: 0 },
+    { id: "1.2.1", titulo: "Adelantamiento en línea continua", multa: 100, meses: 0 },
+    { id: "1.2.2", titulo: "Giro indebido en línea continua", multa: 95, meses: 0 },
+    { id: "1.3", titulo: "Circular sentido contrario", multa: 150, meses: 0 },
+    { id: "1.4", titulo: "Estacionamiento prohibido", multa: 50, meses: 0 },
+    { id: "1.4.1", titulo: "Estacionamiento doble fila", multa: 75, meses: 0 },
+    { id: "1.5", titulo: "Obstruir circulación", multa: 175, meses: 0 },
+    { id: "1.6", titulo: "Saltarse señal de parada", multa: 75, meses: 0 },
+    { id: "1.7", titulo: "No ceder a emergencias", multa: 850, meses: 0 },
+    { id: "1.8", titulo: "Marcha atrás peligrosa", multa: 125, meses: 0 },
+    { id: "1.9", titulo: "Evadir control policial", multa: 600, meses: 0 }, // 24h
+    { id: "1.9.1", titulo: "Fuga de control policial", multa: 1350, meses: 0 }, // 72h
+    { id: "1.10", titulo: "Exceso velocidad (Urbana)", multa: 750, meses: 0 },
+    { id: "1.10.1", titulo: "Exceso velocidad (Interurbana)", multa: 650, meses: 0 },
+    { id: "1.10.2", titulo: "Exceso velocidad (Autovía)", multa: 500, meses: 0 },
+    { id: "1.11", titulo: "Vehículo con fallos", multa: 350, meses: 0 },
+    { id: "1.12", titulo: "Sin luces de noche", multa: 150, meses: 0 },
+    { id: "1.13", titulo: "Sin luces en túnel", multa: 75, meses: 0 },
+    { id: "1.13.1", titulo: "Luces largas en túnel", multa: 25, meses: 0 },
+    { id: "1.14", titulo: "Entrar zona restringida (Vehículo)", multa: 300, meses: 0 },
+    { id: "1.15", titulo: "Conducción bajo estupefacientes", multa: 1500, meses: 3 },
+    { id: "1.15.1", titulo: "Conducción bajo alcohol", multa: 1250, meses: 3 },
+    { id: "1.16", titulo: "Siniestro (1 implicado)", multa: 0, meses: 0 }, // Solo retirada
+    { id: "1.16.1", titulo: "Siniestro (2 implicados)", multa: 250, meses: 0 },
+    { id: "1.16.2", titulo: "Siniestro múltiple", multa: 500, meses: 0 },
+    { id: "1.17", titulo: "Provocar/Insultar al volante", multa: 950, meses: 0 },
+    { id: "1.18", titulo: "Dañar mobiliario público (Coche)", multa: 1050, meses: 0 },
+    { id: "1.18.1", titulo: "Dañar mobiliario privado (Coche)", multa: 1500, meses: 0 },
+    { id: "1.19", titulo: "Intento atropello civil", multa: 1700, meses: 0 },
+    { id: "1.19.1", titulo: "Intento atropello civil y fuga", multa: 7000, meses: 0 },
+    { id: "1.20", titulo: "Intento atropello funcionario", multa: 2000, meses: 0 },
+    { id: "1.20.1", titulo: "Intento atropello funcionario y fuga", multa: 10000, meses: 0 },
+    { id: "1.21", titulo: "Atropello a civil", multa: 5000, meses: 0 },
+    { id: "1.21.1", titulo: "Atropello civil y fuga", multa: 7500, meses: 12 },
+    { id: "1.22", titulo: "Atropello a funcionario", multa: 7500, meses: 15 },
+    { id: "1.22.1", titulo: "Atropello funcionario y fuga", multa: 10000, meses: 15 },
+    { id: "1.23", titulo: "Crear carrera ilegal", multa: 50000, meses: 6 },
+    { id: "1.23.1", titulo: "Participar carrera ilegal", multa: 25000, meses: 1 },
+    { id: "1.24", titulo: "Sin cinturón", multa: 500, meses: 0 },
+    { id: "1.25", titulo: "Persona en maletero", multa: 2500, meses: 0 },
+    { id: "1.26", titulo: "Iniciar persecución policial", multa: 7000, meses: 0 },
+    { id: "1.27", titulo: "Iniciar persecución", multa: 2000, meses: 0 },
+    { id: "1.28", titulo: "Tirar objetos ventanilla", multa: 750, meses: 0 },
+    { id: "1.29", titulo: "Conducción sin matrícula", multa: 1000, meses: 0 },
+    { id: "1.29.1", titulo: "Matrícula no registrada", multa: 250, meses: 0 },
+    { id: "1.29.2", titulo: "Matrícula tapada/mal estado", multa: 750, meses: 0 },
+    { id: "1.30", titulo: "Alterar taxímetro", multa: 1500, meses: 0 },
+    { id: "1.31", titulo: "Niño sin supervisión en coche", multa: 3000, meses: 0 },
+    { id: "1.32", titulo: "No usar intermitentes", multa: 200, meses: 0 },
+    { id: "1.32.1", titulo: "Uso indebido intermitentes", multa: 600, meses: 0 },
+    { id: "1.33", titulo: "Uso de móvil al volante", multa: 3500, meses: 0 },
+    { id: "1.34", titulo: "Conducir siendo menor", multa: 650, meses: 0 },
+    { id: "1.35", titulo: "No guardar distancia seguridad", multa: 450, meses: 0 },
+    { id: "1.36", titulo: "Conducción temeraria", multa: 2000, meses: 0 },
+    { id: "1.37", titulo: "Música demasiado alta", multa: 350, meses: 0 },
+    { id: "1.38", titulo: "Posesión elementos ilícitos (Coche)", multa: 1500, meses: 0 },
+    { id: "1.39", titulo: "Transporte inflamable inadecuado", multa: 650, meses: 0 },
+    { id: "1.39.1", titulo: "Transporte inflamable sin permiso", multa: 1500, meses: 0 },
+    { id: "1.40", titulo: "Uso indebido aeronave", multa: 15000, meses: 12 },
 
-    // --- TÍTULO II: AGRESIONES Y HOMICIDIOS ---
-    { id: "2.1", titulo: "Agresión hacia un civil", multa: 1000, meses: 1 },
-    { id: "2.2", titulo: "Agresión hacia un Funcionario Público", multa: 1500, meses: 3 },
-    { id: "2.3", titulo: "Homicidio hacia un civil", multa: 10000, meses: 60 }, // 5 años
-    { id: "2.4", titulo: "Homicidio hacia un Funcionario Público", multa: 65000, meses: 240 }, // 20 años
-    { id: "2.5", titulo: "Varios homicidios civiles (Por cada uno)", multa: 15000, meses: 180 }, // 15 años
-    { id: "2.6", titulo: "Varios homicidios Funcionarios (Por cada uno)", multa: 20000, meses: 240 }, // 20 años
-    { id: "2.7", titulo: "Tortura", multa: 5000, meses: 12 },
-    { id: "2.8", titulo: "Amenaza con arma de fuego (Civil)", multa: 7000, meses: 3 },
-    { id: "2.9", titulo: "Amenaza con arma blanca (Civil)", multa: 5000, meses: 2 },
-    { id: "2.10", titulo: "Amenaza con arma de fuego (Funcionario)", multa: 10000, meses: 5 },
-    { id: "2.11", titulo: "Amenaza con arma blanca (Funcionario)", multa: 8500, meses: 2 },
-    { id: "2.12", titulo: "Amenaza verbal (Civil)", multa: 500, meses: 0.25 }, // 1 semana
-    { id: "2.13", titulo: "Amenaza verbal (Funcionario)", multa: 5000, meses: 0.5 }, // 2 semanas
-    { id: "2.14", titulo: "Intento de agresión a un civil", multa: 500, meses: 0.25 },
-    { id: "2.15", titulo: "Intento de secuestro a un civil", multa: 16000, meses: 12 },
-    { id: "2.16", titulo: "Secuestro a un civil", multa: 20000, meses: 36 },
-    { id: "2.17", titulo: "Intento agresión a Funcionario", multa: 10000, meses: 1 },
-    { id: "2.18", titulo: "Intento secuestro a Funcionario", multa: 20000, meses: 17 }, // 1 año y 5 meses
-    { id: "2.19", titulo: "Secuestro a un Funcionario", multa: 30000, meses: 60 },
-    { id: "2.20", titulo: "Intento homicidio a Funcionario", multa: 50000, meses: 60 },
-    { id: "2.21", titulo: "Tortura Grave", multa: 15000, meses: 60 },
-    { id: "2.22", titulo: "Alteración del orden público", multa: 1000, meses: 0 },
-    { id: "2.23", titulo: "Racismo", multa: 3000, meses: 0 },
-    { id: "2.24", titulo: "Faltas de respeto a civil", multa: 500, meses: 0 },
-    { id: "2.25", titulo: "Faltas de respeto a Funcionario", multa: 1000, meses: 0 },
-    { id: "2.31", titulo: "Circular sin camiseta", multa: 100, meses: 0 },
-    { id: "2.32", titulo: "Acoso sexual", multa: 3000, meses: 24 },
-    { id: "2.33", titulo: "Negarse a identificarse", multa: 1000, meses: 0.25 },
-    { id: "2.34", titulo: "Obstrucción a la justicia", multa: 1000, meses: 0 },
-    { id: "2.35", titulo: "Llevar máscara sin motivo", multa: 500, meses: 0 },
-    { id: "2.36", titulo: "Manifestación ilegal", multa: 10000, meses: 0 },
-    { id: "2.37", titulo: "Acoso o intimidación", multa: 1300, meses: 0 },
-    { id: "2.38", titulo: "Incitación al odio/violencia", multa: 2000, meses: 0 },
-    { id: "2.39", titulo: "Delito de Estafa", multa: 3000, meses: 0 },
-    { id: "2.40", titulo: "No llevar documentación", multa: 5000, meses: 0 },
-    { id: "2.41", titulo: "Vacilar a cuerpos de la ley", multa: 1000, meses: 0 },
-    { id: "2.42", titulo: "Desorden público", multa: 800, meses: 0 },
-    { id: "2.43", titulo: "Robo secreto de estado", multa: 0, meses: 999 }, // Perpetua
-    { id: "2.44", titulo: "Atentado a la autoridad", multa: 10000, meses: 60 },
-    { id: "2.45", titulo: "Intento rebelión / Golpe Estado", multa: 100000, meses: 999 }, // Permanente
-    { id: "2.46", titulo: "Atentado Terrorista", multa: 500000, meses: 999 }, // Perpetua
-    { id: "2.47", titulo: "Fraude electoral", multa: 50000, meses: 36 },
-    { id: "2.48", titulo: "Impago de multas (+100k)", multa: 0, meses: 999 },
+    // --- CAPÍTULO II: ROBOS ---
+    { id: "2.0", titulo: "Hurto a civil", multa: 500, meses: 0 },
+    { id: "2.0.1", titulo: "Hurto a civil (Arma blanca)", multa: 1000, meses: 24 },
+    { id: "2.0.2", titulo: "Hurto a civil (Arma fuego)", multa: 1500, meses: 36 },
+    { id: "2.1", titulo: "Hurto a funcionario", multa: 1000, meses: 0 },
+    { id: "2.1.1", titulo: "Hurto a funcionario (Arma blanca)", multa: 1500, meses: 24 },
+    { id: "2.1.2", titulo: "Hurto a funcionario (Arma fuego)", multa: 2500, meses: 36 },
+    { id: "2.2", titulo: "Robo a civil", multa: 1000, meses: 0 },
+    { id: "2.2.1", titulo: "Robo a civil (Arma blanca)", multa: 1500, meses: 24 },
+    { id: "2.2.2", titulo: "Robo a civil (Arma fuego)", multa: 2000, meses: 36 },
+    { id: "2.3", titulo: "Robo a funcionario", multa: 2000, meses: 0 },
+    { id: "2.3.1", titulo: "Robo a funcionario (Arma blanca)", multa: 2500, meses: 24 },
+    { id: "2.3.2", titulo: "Robo a funcionario (Arma fuego)", multa: 3500, meses: 36 },
+    { id: "2.4", titulo: "Allanamiento morada", multa: 2500, meses: 3 },
+    { id: "2.4.1", titulo: "Allanamiento morada armada", multa: 3500, meses: 6 },
+    { id: "2.5", titulo: "Robo a locales", multa: 5500, meses: 48 },
+    { id: "2.5.1", titulo: "Robo a locales armado", multa: 6500, meses: 72 },
+    { id: "2.6", titulo: "Robo Joyería", multa: 45000, meses: 180 }, // 15 años
+    { id: "2.6.1", titulo: "Robo Joyería armado", multa: 50000, meses: 204 }, // 17 años
+    { id: "2.7", titulo: "Robo Banco", multa: 250000, meses: 264 }, // 22 años
+    { id: "2.7.1", titulo: "Robo Banco armado", multa: 500000, meses: 300 }, // 25 años
+    { id: "2.8", titulo: "Robo a vehículo", multa: 2500, meses: 6 },
+    { id: "2.8.1", titulo: "Robo a vehículo armado", multa: 5000, meses: 12 },
+    { id: "2.9", titulo: "Apropiación cosa perdida (legal)", multa: 100, meses: 0 },
+    { id: "2.9.1", titulo: "Apropiación cosa perdida (ilegal)", multa: 1000, meses: 0 },
+    { id: "2.10", titulo: "Robo edificio estatal", multa: 25000000, meses: 999 }, // Perpetua
+    { id: "2.10.1", titulo: "Robo estatal armado", multa: 30000000, meses: 999 }, // Perpetua
+    { id: "2.11", titulo: "Hurto uso público", multa: 500, meses: 0 },
+    { id: "2.11.1", titulo: "Hurto uso público armado", multa: 750, meses: 0 },
+    { id: "2.12", titulo: "Robo uso público", multa: 750, meses: 0 },
+    { id: "2.12.1", titulo: "Robo uso público armado", multa: 900, meses: 0 },
+    { id: "2.13", titulo: "Hurto uso privado", multa: 1000, meses: 0 },
+    { id: "2.13.1", titulo: "Hurto uso privado armado", multa: 1250, meses: 0 },
+    { id: "2.14", titulo: "Robo uso privado", multa: 750, meses: 0 },
+    { id: "2.14.1", titulo: "Robo uso privado armado", multa: 900, meses: 0 },
+    { id: "2.15", titulo: "Ocupación ilegal (<48h)", multa: 500, meses: 0 },
 
-    // --- ROBOS Y ASALTOS ---
-    { id: "2.49", titulo: "Robo con intimidación a civil", multa: 3500, meses: 3 },
-    { id: "2.50", titulo: "Robo con violencia a civil", multa: 4500, meses: 6 },
-    { id: "2.51", titulo: "Robo Menor (Gasolinera/ATM)", multa: 15000, meses: 36 },
-    { id: "2.52", titulo: "Robo Medio (Armería/Tool/Casa)", multa: 40000, meses: 180 },
-    { id: "2.53", titulo: "Robo Joyería", multa: 100000, meses: 600 }, // 50 años
-    { id: "2.54", titulo: "Robo Mayor (Banco)", multa: 500000, meses: 999 }, // Perpetua
-    { id: "2.55", titulo: "Allanamiento propiedad privada", multa: 5500, meses: 36 },
+    // --- CAPÍTULO III: LIBERTAD E INTEGRIDAD ---
+    { id: "3.0", titulo: "Insultos orientación sexual", multa: 1750, meses: 0 },
+    { id: "3.1", titulo: "Insultos racistas/religiosos", multa: 1000, meses: 0 },
+    { id: "3.2", titulo: "Violencia de género", multa: 450, meses: 3 },
+    { id: "3.3", titulo: "Intento de agresión", multa: 650, meses: 0 },
+    { id: "3.4", titulo: "Agresión", multa: 750, meses: 0 },
+    { id: "3.5", titulo: "Agresión a funcionario", multa: 1000, meses: 0 },
+    { id: "3.6", titulo: "Alteración orden público", multa: 1450, meses: 0 },
+    { id: "3.7", titulo: "Acoso", multa: 2500, meses: 6 },
+    { id: "3.8", titulo: "Intento violación", multa: 5000, meses: 12 },
+    { id: "3.8.1", titulo: "Violación", multa: 15000, meses: 60 },
+    { id: "3.9", titulo: "Suplantación identidad", multa: 1725, meses: 3 },
+    { id: "3.9.1", titulo: "Suplantación para culpar", multa: 4750, meses: 12 },
+    { id: "3.10", titulo: "Tráfico de personas", multa: 16000, meses: 24 },
+    { id: "3.10.1", titulo: "Trata de blancas", multa: 38000, meses: 48 },
+    { id: "3.11", titulo: "Maltrato", multa: 3275, meses: 0 },
+    { id: "3.12", titulo: "Intento agresión menor", multa: 1000, meses: 0 },
+    { id: "3.13", titulo: "Agresión menor", multa: 3500, meses: 15 },
+    { id: "3.8-M", titulo: "Intento violación menor", multa: 15000, meses: 48 }, // ID modificado para evitar duplicado
+    { id: "3.8.1-M", titulo: "Violación menor", multa: 55000, meses: 84 }, // ID modificado
+    { id: "3.9-P", titulo: "Prostitución vía pública", multa: 3500, meses: 12 },
+    { id: "3.9.1-P", titulo: "Prostitución local ilegal", multa: 8125, meses: 36 },
+    { id: "3.10-D", titulo: "Disturbios vía pública", multa: 1000, meses: 0 },
+    { id: "3.10.1-D", titulo: "Disturbios propiedad privada", multa: 5000, meses: 2 },
+    { id: "3.11-C", titulo: "Comercio ilegal objetos", multa: 1000, meses: 4 },
+    { id: "3.12-A", titulo: "Intentar alentar delito", multa: 500, meses: 12 },
+    { id: "3.12.1", titulo: "Alentar delito", multa: 1500, meses: 24 },
+    { id: "3.13-V", titulo: "Conducta violenta", multa: 225, meses: 0 },
+    { id: "3.14", titulo: "Creación organización peligrosa", multa: 250000, meses: 999 }, // Perpetua
+    { id: "3.14.1", titulo: "Intento creación org. peligrosa", multa: 125000, meses: 144 }, // 12 años
+    { id: "3.14.2", titulo: "Alentar creación org. peligrosa", multa: 85000, meses: 144 }, // 12 años
+    { id: "3.14.3", titulo: "Pertenecer org. peligrosa", multa: 25000, meses: 264 }, // 22 años
+    { id: "3.15", titulo: "Realizar manifestación ilegal", multa: 1250, meses: 0 },
+    { id: "3.15.1", titulo: "Participar manifestación ilegal", multa: 750, meses: 0 },
+    { id: "3.16", titulo: "Exhibicionismo", multa: 850, meses: 0 },
+    { id: "3.16.1", titulo: "Exhibicionismo propiedad privada", multa: 975, meses: 0 },
+    { id: "3.17", titulo: "Enmascarado sin motivo", multa: 50, meses: 0 },
+    { id: "3.17.1", titulo: "Enmascarado para delinquir", multa: 750, meses: 0 },
+    { id: "3.18", titulo: "Suplantación funcionario", multa: 5675, meses: 3 },
+    { id: "3.18.1", titulo: "Suplantación func. para culpar", multa: 15835, meses: 9 },
+    { id: "3.19", titulo: "Insultos a funcionario", multa: 750, meses: 0 },
+    { id: "3.19.1", titulo: "Insultos a civil", multa: 250, meses: 0 },
+    { id: "3.20", titulo: "Contaminar zonas naturales", multa: 1500, meses: 2 },
+    { id: "3.21", titulo: "Entrar zonas restringidas", multa: 750, meses: 0 },
+    { id: "3.22", titulo: "Falsa alarma incendios", multa: 12750, meses: 0 },
+    { id: "3.23", titulo: "Portar chaleco antibalas ilegal", multa: 1250, meses: 0 },
 
-    // --- TÍTULO III: TRÁFICO (Sección 1) ---
-    { id: "3.1.1", titulo: "Exceso velocidad (+40km/h)", multa: 100, meses: 0 },
-    { id: "3.1.2", titulo: "Exceso velocidad (+60km/h)", multa: 200, meses: 0 },
-    { id: "3.1.3", titulo: "Exceso velocidad (+80km/h)", multa: 400, meses: 0 },
-    { id: "3.1.4", titulo: "Exceso velocidad (+100km/h)", multa: 500, meses: 1 },
-    { id: "3.1.5", titulo: "Exceso velocidad (+120km/h)", multa: 600, meses: 1 },
-    { id: "3.1.6", titulo: "Conducción temeraria", multa: 500, meses: 0 },
-    { id: "3.1.7", titulo: "Conductor en mal estado", multa: 1000, meses: 0 },
-    { id: "3.1.8", titulo: "Accidente sin heridos", multa: 3000, meses: 0 },
-    { id: "3.1.9", titulo: "Accidente con heridos", multa: 5000, meses: 0 },
-    { id: "3.1.10", titulo: "Provocar accidente grave", multa: 10000, meses: 0.25 },
-    { id: "3.1.11", titulo: "Sin cinturón abrochado", multa: 200, meses: 0 },
-    { id: "3.1.12", titulo: "Estacionar lugar no permitido", multa: 200, meses: 0 },
-    { id: "3.1.13", titulo: "Estacionar indebidamente", multa: 100, meses: 0 },
-    { id: "3.1.14", titulo: "Ignorar señales tráfico", multa: 500, meses: 0 },
-    { id: "3.1.15", titulo: "Saltarse semáforo rojo", multa: 200, meses: 0 },
-    { id: "3.1.16", titulo: "Uso excesivo claxon", multa: 150, meses: 0 },
-    { id: "3.1.17", titulo: "Giro indebido", multa: 150, meses: 0 },
-    { id: "3.1.18", titulo: "Circular sentido contrario", multa: 200, meses: 0 },
-    { id: "3.1.19", titulo: "No ceder paso emergencias", multa: 1000, meses: 0 },
-    { id: "3.1.20", titulo: "Adelantamiento indebido", multa: 300, meses: 0 },
-    { id: "3.1.21", titulo: "Circular marcha atrás", multa: 500, meses: 0 },
-    { id: "3.1.22", titulo: "Saltarse control de tráfico", multa: 3000, meses: 5 },
-    { id: "3.1.23", titulo: "Vehículo malas condiciones", multa: 200, meses: 0 },
-    { id: "3.1.24", titulo: "Conducir bajo drogas/alcohol", multa: 1000, meses: 1 },
-    { id: "3.1.25", titulo: "Negarse prueba alcohol/drogas", multa: 2000, meses: 2 },
-    { id: "3.1.26", titulo: "No colocar faros de noche", multa: 100, meses: 0 },
-    { id: "3.1.27", titulo: "Sin intermitentes al girar", multa: 50, meses: 0 },
-    { id: "3.1.28", titulo: "Sin intermitentes al aparcar", multa: 100, meses: 0 },
-    { id: "3.1.29", titulo: "Vehículo pesado en puente", multa: 1000, meses: 0 },
-    { id: "3.1.30", titulo: "Negarse inspección vehículo", multa: 1000, meses: 0 },
-    { id: "3.1.31", titulo: "Modificaciones ilegales", multa: 500, meses: 0 },
-    { id: "3.1.32", titulo: "Tractor por vía pública", multa: 500, meses: 0 },
-    { id: "3.1.33", titulo: "Iniciar persecución", multa: 1000, meses: 12 },
+    // --- CAPÍTULO IV: ARMAS Y SALUD ---
+    { id: "4.0", titulo: "Posesión arma ilegal", multa: 500, meses: 1 },
+    { id: "4.0.1", titulo: "Posesión arma sin licencia", multa: 1350, meses: 3 },
+    { id: "4.1", titulo: "Uso indebido arma sin licencia", multa: 6500, meses: 12 },
+    { id: "4.1.1", titulo: "Uso indebido arma", multa: 7500, meses: 15 },
+    { id: "4.2", titulo: "Posesión armas contrabando", multa: 10000, meses: 36 },
+    { id: "4.2.1", titulo: "Contrabando de armas", multa: 250575, meses: 60 },
+    { id: "4.2.1.1", titulo: "Compra armas contrabando", multa: 4500, meses: 5 },
+    { id: "4.3", titulo: "Iniciar tiroteo", multa: 55675, meses: 48 },
+    { id: "4.4", titulo: "Iniciar disturbio con arma", multa: 1250, meses: 4 },
+    { id: "4.5", titulo: "Posesión estupefacientes (Kg/L)", multa: 5000, meses: 24 },
+    { id: "4.5.1", titulo: "Posesión estupefacientes contrabando", multa: 15000, meses: 84 },
+    { id: "4.5.2", titulo: "Contrabando estupefacientes", multa: 50000, meses: 120 },
+    { id: "4.5.3", titulo: "Compra estupefacientes", multa: 15000, meses: 24 },
+    { id: "4.5.4", titulo: "Consumición estupefacientes", multa: 1500, meses: 12 },
+    { id: "4.5.5", titulo: "Ir bajo efectos estupefacientes", multa: 1500, meses: 6 },
+    { id: "4.6", titulo: "Alcohol vía pública", multa: 400, meses: 0 },
+    { id: "4.6.1", titulo: "Alcohol menor edad", multa: 650, meses: 0 },
+    { id: "4.6.2", titulo: "Bajo efectos alcohol vía pública", multa: 500, meses: 0 },
 
-    // --- TÍTULO III: CARNETS (Sección 2) ---
-    { id: "3.2.1", titulo: "Conducir sin Carnet", multa: 5000, meses: 5 },
-    { id: "3.2.2", titulo: "Conducir sin Carnet encima", multa: 500, meses: 0 },
-    { id: "3.2.3", titulo: "Conducir sin Carnet Tipo B", multa: 1000, meses: 1 },
-    { id: "3.2.4", titulo: "Conducir sin Carnet Tipo C1", multa: 5000, meses: 12 },
-    { id: "3.2.5", titulo: "Conducir sin Carnet Tipo C", multa: 8000, meses: 12 },
-    { id: "3.2.6", titulo: "Conducir sin Carnet Tipo CE", multa: 10000, meses: 12 },
+    // --- CAPÍTULO V: HOMICIDIOS Y SECUESTROS ---
+    { id: "5.0", titulo: "Intento homicidio civil", multa: 25000, meses: 48 },
+    { id: "5.0.1", titulo: "Intento homicidio civil (Blanca)", multa: 27500, meses: 48 },
+    { id: "5.0.2", titulo: "Intento homicidio civil (Fuego sin lic)", multa: 50000, meses: 60 },
+    { id: "5.0.3", titulo: "Intento homicidio civil (Fuego con lic)", multa: 52500, meses: 60 },
+    { id: "5.1", titulo: "Intento homicidio funcionario", multa: 35000, meses: 60 },
+    { id: "5.1.1", titulo: "Intento homicidio funcionario (Blanca)", multa: 37500, meses: 60 },
+    { id: "5.1.2", titulo: "Intento homicidio funcionario (Fuego sin lic)", multa: 60000, meses: 72 },
+    { id: "5.1.3", titulo: "Intento homicidio funcionario (Fuego con lic)", multa: 62500, meses: 72 },
+    { id: "5.2", titulo: "Homicidio civil", multa: 75000, meses: 180 }, // 15 años
+    { id: "5.2.1", titulo: "Homicidio civil (Blanca)", multa: 100000, meses: 204 }, // 17 años
+    { id: "5.2.2", titulo: "Homicidio civil (Fuego sin lic)", multa: 100000, meses: 204 },
+    { id: "5.2.3", titulo: "Homicidio civil (Fuego con lic)", multa: 100000, meses: 204 },
+    { id: "5.3", titulo: "Intento homicidio animal", multa: 15000, meses: 20 },
+    { id: "5.3.1", titulo: "Intento homicidio animal (Blanca)", multa: 15000, meses: 20 },
+    { id: "5.3.2", titulo: "Intento homicidio animal (Fuego sin lic)", multa: 25000, meses: 12 },
+    { id: "5.3.3", titulo: "Intento homicidio animal (Fuego con lic)", multa: 35000, meses: 24 },
+    { id: "5.4", titulo: "Secuestro civil", multa: 3500, meses: 20 },
+    { id: "5.4.1", titulo: "Secuestro civil (Blanca)", multa: 3750, meses: 36 },
+    { id: "5.4.2", titulo: "Secuestro civil (Fuego sin lic)", multa: 4000, meses: 48 },
+    { id: "5.4.3", titulo: "Secuestro civil (Fuego con lic)", multa: 4500, meses: 50 },
+    { id: "5.5", titulo: "Secuestro menor", multa: 3700, meses: 36 },
+    { id: "5.5.1", titulo: "Secuestro menor (Blanca)", multa: 4000, meses: 48 },
+    { id: "5.5.2", titulo: "Secuestro menor (Fuego sin lic)", multa: 4300, meses: 60 },
+    { id: "5.5.3", titulo: "Secuestro menor (Fuego con lic)", multa: 4800, meses: 60 },
+    { id: "5.6", titulo: "Secuestro funcionario", multa: 7000, meses: 48 },
+    { id: "5.6.1", titulo: "Secuestro funcionario (Blanca)", multa: 7250, meses: 60 },
+    { id: "5.6.2", titulo: "Secuestro funcionario (Fuego sin lic)", multa: 7500, meses: 60 },
+    { id: "5.6.3", titulo: "Secuestro funcionario (Fuego con lic)", multa: 8000, meses: 60 },
+    { id: "5.7", titulo: "Secuestro coacción", multa: 5500, meses: 36 },
+    { id: "5.7.1", titulo: "Secuestro coacción (Blanca)", multa: 5750, meses: 48 },
+    { id: "5.7.2", titulo: "Secuestro coacción (Fuego sin lic)", multa: 6000, meses: 48 },
+    { id: "5.7.3", titulo: "Secuestro coacción (Fuego con lic)", multa: 6500, meses: 48 },
+    { id: "5.8", titulo: "Secuestro robo", multa: 5000, meses: 48 },
+    { id: "5.8.1", titulo: "Secuestro robo (Blanca)", multa: 5250, meses: 60 },
+    { id: "5.8.2", titulo: "Secuestro robo (Fuego sin lic)", multa: 5500, meses: 60 },
+    { id: "5.8.3", titulo: "Secuestro robo (Fuego con lic)", multa: 6000, meses: 60 },
+    { id: "5.9", titulo: "Amenaza condicional", multa: 10000, meses: 4 },
+    { id: "5.10", titulo: "Amenaza incondicional", multa: 1000, meses: 4 },
+    { id: "5.11", titulo: "Amenaza leve", multa: 1500, meses: 2 },
+    { id: "5.12", titulo: "Extorsión persona", multa: 2000, meses: 4 },
+    { id: "5.12.1", titulo: "Extorsión persona (Blanca)", multa: 2250, meses: 12 },
+    { id: "5.12.2", titulo: "Extorsión persona (Fuego sin lic)", multa: 2500, meses: 15 },
+    { id: "5.12.3", titulo: "Extorsión persona (Fuego con lic)", multa: 3000, meses: 24 },
+    { id: "5.13", titulo: "Extorsión negocio", multa: 5200, meses: 6 },
+    { id: "5.14", titulo: "Extorsión funcionario", multa: 5900, meses: 6 },
+    { id: "5.14.1", titulo: "Extorsión funcionario (Blanca)", multa: 6150, meses: 12 },
+    { id: "5.14.2", titulo: "Extorsión funcionario (Fuego sin lic)", multa: 6400, meses: 12 },
+    { id: "5.14.3", titulo: "Extorsión funcionario (Fuego con lic)", multa: 6900, meses: 12 },
+    { id: "5.15", titulo: "Extorsión Juez", multa: 18500, meses: 24 },
+    { id: "5.15.1", titulo: "Extorsión Juez (Blanca)", multa: 18750, meses: 36 },
+    { id: "5.15.2", titulo: "Extorsión Juez (Fuego sin lic)", multa: 19000, meses: 36 },
+    { id: "5.15.3", titulo: "Extorsión Juez (Fuego con lic)", multa: 19500, meses: 48 },
+    { id: "5.16", titulo: "Falso testimonio", multa: 6000, meses: 24 },
+    { id: "5.17", titulo: "Manipulación doc. estado", multa: 2500, meses: 24 },
 
-    // --- TÍTULO III: CARRERAS (Sección 3) ---
-    { id: "3.3.1", titulo: "Organizar carrera ilegal", multa: 10000, meses: 36 },
-    { id: "3.3.2", titulo: "Herido en carrera ilegal", multa: 10000, meses: 60 },
-    { id: "3.3.3", titulo: "Homicidio en carrera ilegal", multa: 20000, meses: 120 },
-    { id: "3.3.4", titulo: "Participar en carrera ilegal", multa: 5000, meses: 0 },
-
-    // --- TÍTULO IV: VENTA DE ARMAS (Sección 1) ---
-    { id: "4.1.1", titulo: "Venta ilegal navaja", multa: 300, meses: 0 },
-    { id: "4.1.2", titulo: "Venta ilegal Beretta M9", multa: 12000, meses: 1 },
-    { id: "4.1.3", titulo: "Venta ilegal Colt M1911", multa: 12500, meses: 1 },
-    { id: "4.1.4", titulo: "Venta ilegal Remington 870", multa: 15000, meses: 3 },
-    { id: "4.1.5", titulo: "Venta ilegal AK-47", multa: 55000, meses: 12 },
-    { id: "4.1.6", titulo: "Venta ilegal Colt TEC-9", multa: 26500, meses: 1 },
-    { id: "4.1.7", titulo: "Venta ilegal Skorpion", multa: 4500, meses: 1 },
-    { id: "4.1.8", titulo: "Venta ilegal PPSH-41", multa: 31500, meses: 1 },
-    { id: "4.1.9", titulo: "Venta ilegal Desert Eagle", multa: 18000, meses: 2 },
-    { id: "4.1.10", titulo: "Venta ilegal Kriss Vector", multa: 29500, meses: 1 },
-    { id: "4.1.11", titulo: "Venta ilegal Python Colt", multa: 24500, meses: 2 },
-    { id: "4.1.12", titulo: "Venta ilegal LMT L129A1", multa: 18500, meses: 2 },
-    { id: "4.1.13", titulo: "Venta ilegal Remington MSR", multa: 48000, meses: 4 },
-    { id: "4.1.14", titulo: "Venta ilegal M249", multa: 55000, meses: 9 },
-    { id: "4.1.15", titulo: "Venta ilegal M14", multa: 20000, meses: 2 },
-
-    // --- TÍTULO IV: USO DE ARMAS (Sección 2) ---
-    { id: "4.2.1", titulo: "Portar Beretta M9 (sin lic)", multa: 5000, meses: 0 },
-    { id: "4.2.2", titulo: "Portar Colt M1911 (sin lic)", multa: 5500, meses: 0 },
-    { id: "4.2.3", titulo: "Portar Kriss Vector (sin lic)", multa: 17000, meses: 0 },
-    { id: "4.2.4", titulo: "Portar AK-47", multa: 49000, meses: 24 },
-    { id: "4.2.5", titulo: "Portar M249", multa: 53000, meses: 36 },
-    { id: "4.2.6", titulo: "Portar Desert Eagle", multa: 17000, meses: 12 },
-    { id: "4.2.7", titulo: "Portar Remington MSR", multa: 30000, meses: 24 },
-    { id: "4.2.8", titulo: "Portar TEC-9", multa: 19000, meses: 36 },
-    { id: "4.2.9", titulo: "Portar Python Colt (sin lic)", multa: 9000, meses: 0 },
-    { id: "4.2.10", titulo: "Portar M14 (sin lic)", multa: 14500, meses: 0 },
-    { id: "4.2.11", titulo: "Portar Remington 870 (sin lic)", multa: 14000, meses: 0 },
-    { id: "4.2.13", titulo: "Portar LMT L129A1 (sin lic)", multa: 15000, meses: 0 },
-    { id: "4.2.14", titulo: "Portar Skorpion (sin lic)", multa: 12000, meses: 0 },
-    { id: "4.2.15", titulo: "Portar PPSH-41 (sin lic)", multa: 20000, meses: 0 },
-
-    // --- TÍTULO V: CONTRA ADMINISTRACIÓN ---
-    { id: "5.1", titulo: "Desacato a la ley", multa: 500, meses: 0 },
-    { id: "5.2", titulo: "Resistirse al arresto", multa: 300, meses: 0 },
-    { id: "5.4", titulo: "Falso testimonio", multa: 1000, meses: 0 },
-
-    // --- TÍTULO VI: ALERTAS DEFCON ---
-    { id: "6.1.2", titulo: "Salir en DEFCON roja con arma", multa: 10000, meses: 0 },
-    { id: "6.1.3", titulo: "Salir en DEFCON antiterrorista", multa: 20000, meses: 1 },
-
-    // --- TÍTULO VII: CIBERNÉTICOS ---
-    { id: "7.1", titulo: "Ciber amenazas de muerte", multa: 3000, meses: 1 },
-    { id: "7.2", titulo: "Sexting ilegal", multa: 2500, meses: 12 },
-    { id: "7.3", titulo: "Enviar img sin consentimiento", multa: 3000, meses: 0 },
-    { id: "7.4", titulo: "Ciberbullying", multa: 1500, meses: 0 },
-    { id: "7.5", titulo: "Acoso Cibernético", multa: 3000, meses: 0 },
-
-    // --- TÍTULO IX: PROTECCIÓN DATOS ---
-    { id: "9.1", titulo: "Grabar policía sin permiso", multa: 2500, meses: 0 }
+    // --- CAPÍTULO VI: CIBERNÉTICOS ---
+    { id: "6.0", titulo: "Abuso menores cibernético", multa: 2000, meses: 6 },
+    { id: "6.0.1", titulo: "Acoso menores cibernético", multa: 1000, meses: 7 },
+    { id: "6.0.2", titulo: "Cyberbullying menores", multa: 3000, meses: 12 },
+    { id: "6.0.3", titulo: "Pedofilia cibernética", multa: 1000, meses: 2 },
+    { id: "6.0.4", titulo: "Manipulación menores ciber", multa: 2500, meses: 6 },
+    { id: "6.1", titulo: "Acoso cibernético", multa: 500, meses: 1 },
+    { id: "6.1.1", titulo: "Cyberbullying", multa: 750, meses: 2 },
+    { id: "6.1.2", titulo: "Manipulación psicológica ciber", multa: 1000, meses: 3 },
+    { id: "6.1.3", titulo: "Amenazas cibernéticas", multa: 2000, meses: 3 },
+    { id: "6.1.4", titulo: "Publicación img. sin permiso", multa: 2000, meses: 3 },
+    { id: "6.1.5", titulo: "Sexting", multa: 3000, meses: 3 },
+    { id: "6.1.6", titulo: "Obligar enviar fotos", multa: 1000, meses: 3 },
+    { id: "6.2", titulo: "Phishing", multa: 2000, meses: 3 },
+    { id: "6.3", titulo: "Malware", multa: 1000, meses: 5 }
 ];
 
 // =========================================================
@@ -259,7 +340,7 @@ function update() {
     let totalMeses = 0;
 
     if(selected.length === 0) {
-        sumDiv.innerHTML = "<p style='color:#666; text-align:center; margin-top:20px;'>Ningún cargo seleccionado.</p>";
+        sumDiv.innerHTML = "<p style='color:#666; text-align:center; margin-top:20px;'>Lista vacía.</p>";
     }
 
     selected.forEach((s, i) => {
@@ -276,16 +357,16 @@ function update() {
     // Actualizar Textos Totales
     document.getElementById('tFine').innerText = totalMulta.toLocaleString() + "€";
     
-    let textoTiempo = "0m";
-    if (totalMeses >= 900) textoTiempo = "PERPETUA";
+    let textoJail = "0m";
+    if (totalMeses >= 900) textoJail = "PERPETUA";
     else if (totalMeses >= 12) {
         const a = Math.floor(totalMeses / 12);
         const m = totalMeses % 12;
-        textoTiempo = `${a} Años` + (m > 0 ? ` y ${m} Meses` : "");
+        textoJail = `${a} Años` + (m > 0 ? ` y ${m} Meses` : "");
     } else {
-        textoTiempo = totalMeses + " Meses";
+        textoJail = totalMeses + " Meses";
     }
-    document.getElementById('tJail').innerText = textoTiempo;
+    document.getElementById('tJail').innerText = textoJail;
 }
 
 // Copiar al portapapeles
