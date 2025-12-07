@@ -14,7 +14,8 @@ const WEBHOOK_STAFF = "https://discord.com/api/webhooks/1446993873975906344/lmlM
 // Importante: En 'discordId', pon el ID numérico del usuario.
 const AGENTES = [
     { placa: "CF-001", pass: "Jorge0124", rango: "Co-Fundador", discordId: "803332911926739005" },
-    { placa: "GC-055", pass: "1234", rango: "Agente", discordId: "OTRO_ID_NUMERICO" },
+    { placa: "FN-001", pass: "Alex0124", rango: "Fundador", discordId: "739425840214835270" },
 ];
+
 
 
