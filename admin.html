@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración - TOP SECRET</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-item {
+            background: #252525;
+            border-left: 4px solid #c0392b; /* Rojo Admin */
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-btn {
+            background: #c0392b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .admin-btn:hover { background: #a93226; }
+        .refresh-btn { background: var(--accent); margin-bottom: 20px; width: auto; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" style="background: #1a1a1a; border-bottom: 2px solid #c0392b;">
+        <div class="nav-brand" style="color: #c0392b;"><i class="fas fa-user-secret"></i> ADMINISTRACIÓN FEDERAL</div>
+        <button onclick="location.href='menu.html'" class="btn-logout">Salir</button>
+    </nav>
+
+    <div class="main-container">
+        <h2 style="color: #c0392b;">GESTIÓN DE ANTECEDENTES (BORRADO)</h2>
+        <p>Cuidado: Lo que borres aquí desaparece para siempre.</p>
+        
+        <button onclick="cargarHistorial()" class="btn btn-blue refresh-btn"><i class="fas fa-sync"></i> Actualizar Lista</button>
+
+        <div id="listaAdmin">
+            <!-- Aquí saldrán los crímenes -->
+            <p>Cargando datos...</p>
+        </div>
+    </div>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { db } from './firebase.js';
+        import { collection, getDocs, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // --- SEGURIDAD BÁSICA ---
+        const pass = prompt("INTRODUCE CLAVE DE ADMINISTRADOR:");
+        if(pass !== "admin123") { // CAMBIA ESTA CONTRASEÑA POR LA QUE QUIERAS
+            alert("ACCESO DENEGADO");
+            window.location.href = 'index.html';
+        }
+
+        // Hacer funciones globales
+        window.cargarHistorial = async function() {
+            const div = document.getElementById('listaAdmin');
+            div.innerHTML = "Cargando...";
+            
+            try {
+                // Traemos todo el historial ordenado por fecha
+                const q = query(collection(db, "historial_criminal"), orderBy("fecha", "desc"));
+                const snapshot = await getDocs(q);
+
+                div.innerHTML = "";
+                if (snapshot.empty) {
+                    div.innerHTML = "<p>No hay antecedentes registrados.</p>";
+                    return;
+                }
+
+                snapshot.forEach(documento => {
+                    const data = documento.data();
+                    const idDoc = documento.id; // Este es el ID que necesitamos para borrar
+                    
+                    // Formatear fecha
+                    const fecha = new Date(data.fecha).toLocaleString();
+
+                    div.innerHTML += `
+                        <div class="admin-item" id="item-${idDoc}">
+                            <div>
+                                <strong style="color:#fff; font-size:16px;">${data.detenido_nombre}</strong> 
+                                <span style="color:#888; font-size:12px;">(${data.detenido_id})</span><br>
+                                <span style="color:#e67e22; font-weight:bold;">${data.tipo.toUpperCase()}</span> 
+                                <span style="color:#aaa;"> - ${fecha}</span><br>
+                                <em style="color:#ccc; font-size:13px;">${data.cargos_resumen}</em><br>
+                                <small>Oficial: ${data.oficial}</small>
+                            </div>
+                            <button onclick="borrarRegistro('${idDoc}')" class="admin-btn">
+                                <i class="fas fa-trash"></i> BORRAR
+                            </button>
+                        </div>
+                    `;
+                });
+
+            } catch(e) {
+                console.error(e);
+                div.innerHTML = `<p style="color:red">Error cargando lista. (Revisa la consola con F12)</p>`;
+            }
+        }
+
+        // Función para borrar
+        window.borrarRegistro = async function(idDoc) {
+            if(!confirm("¿ESTÁS SEGURO? Esta acción es irreversible.")) return;
+
+            try {
+                await deleteDoc(doc(db, "historial_criminal", idDoc));
+                // Eliminar visualmente sin recargar
+                document.getElementById('item-' + idDoc).remove();
+                alert("🗑️ Registro eliminado correctamente.");
+            } catch(e) {
+                alert("Error al borrar: " + e.message);
+            }
+        }
+
+        // Cargar al iniciar
+        window.cargarHistorial();
+
+    </script>
+
+</body>
+</html>
