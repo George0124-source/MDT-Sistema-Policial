@@ -4,175 +4,221 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDT - Peninsula RP</title>
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Iconos FontAwesome -->
+    <!-- Vinculamos CSS (v=10 para forzar actualización) -->
+    <link rel="stylesheet" href="style.css?v=10.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Fuente Google (Inter y Roboto) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- BARRA SUPERIOR (Siempre visible) -->
-    <header class="top-bar">
-        <div class="top-left">
-            <button class="web-btn"><i class="fas fa-globe"></i> PENINSULA WEB</button>
-        </div>
-        <div class="top-center">
-            <span>PENINSULA RP - V.2.0</span>
-        </div>
-        <div class="top-right">
-            <div class="status-box off-duty" id="statusBtn" onclick="toggleService()">
-                <i class="fas fa-user-clock"></i> <span id="statusText">FUERA DE SERVICIO</span>
+    <!-- ========================================= -->
+    <!-- 🔒 PANTALLA DE LOGIN (LO PRIMERO QUE SE VE) -->
+    <!-- ========================================= -->
+    <section id="login-screen">
+        <div class="login-box">
+            <div class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" class="login-logo">
+                <h2>ACCESO RESTRINGIDO</h2>
+                <p>MDT PENINSULA RP | V.2.0</p>
             </div>
-            <div class="battery-info">
-                <i class="fas fa-wifi"></i> LTE
-                <i class="fas fa-battery-three-quarters"></i> 80%
-            </div>
-        </div>
-    </header>
-
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main id="app">
-
-        <!-- PANTALLA 1: MENÚ PRINCIPAL (HOME) -->
-        <section id="home-screen" class="active-screen">
             
-            <div class="section-header">
-                <h2>FUERZAS Y CUERPOS DE SEGURIDAD</h2>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" class="mini-flag">
-            </div>
-
-            <!-- GRID DE BOTONES -->
-            <div class="dashboard-grid">
-                <div class="dash-card">
-                    <div class="icon-glow blue"><i class="fas fa-desktop"></i></div>
-                    <h3>DISPATCH</h3>
+            <form id="loginForm">
+                <div class="input-container">
+                    <i class="fas fa-id-badge"></i>
+                    <input type="text" id="badge" placeholder="Número de Placa" required autocomplete="off">
                 </div>
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn-enter">INICIAR SESIÓN</button>
+                <p id="errorMsg" class="error-text">Credenciales inválidas</p>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- ========================================= -->
+    <!-- 🖥️ SISTEMA MDT (OCULTO POR DEFECTO)      -->
+    <!-- ========================================= -->
+    <div id="app-container" style="display: none;">
+        
+        <!-- BARRA SUPERIOR -->
+        <header class="top-bar">
+            <div class="top-left">
+                <button class="web-btn"><i class="fas fa-globe"></i> PENINSULA WEB</button>
+            </div>
+            <div class="top-center">
+                PENINSULA RP - V.2.0 BETA
+            </div>
+            <div class="top-right">
+                <div class="status-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
+                </div>
+                <div><i class="fas fa-wifi"></i> LTE</div>
+                <div><i class="fas fa-battery-full"></i> 100%</div>
+            </div>
+        </header>
+
+        <!-- ZONA PRINCIPAL -->
+        <main id="app">
+
+            <!-- PANTALLA 1: MENU PRINCIPAL -->
+            <section id="menu-screen" class="screen active">
                 
-                <div class="dash-card" onclick="alert('Próximamente: Buscador de Ciudadanos')">
-                    <div class="icon-glow blue"><i class="fas fa-magnifying-glass"></i></div>
-                    <h3>BÚSQUEDA CIUDADANA</h3>
+                <div class="section-header">
+                    <h2>FUERZAS Y CUERPOS DE SEGURIDAD</h2>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" class="flag-img">
                 </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow orange"><i class="fas fa-clipboard-list"></i></div>
-                    <h3>DENUNCIAS E INFORMES</h3>
-                </div>
+                <!-- GRID DE BOTONES -->
+                <div class="dashboard-grid">
+                    
+                    <div class="card">
+                        <div class="icon-box blue"><i class="fas fa-desktop"></i></div>
+                        <h3>DISPATCH</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow red"><i class="fas fa-car-side"></i></div>
-                    <h3>VEHÍCULOS</h3>
-                </div>
+                    <div class="card" onclick="alert('Próximamente')">
+                        <div class="icon-box blue"><i class="fas fa-magnifying-glass"></i></div>
+                        <h3>BÚSQUEDA CIUDADANA</h3>
+                    </div>
 
-                <!-- BOTÓN QUE ABRE EL CÓDIGO PENAL -->
-                <div class="dash-card" onclick="switchScreen('penal-screen')">
-                    <div class="icon-glow yellow"><i class="fas fa-scale-balanced"></i></div>
-                    <h3>CÓDIGO PENAL</h3>
-                </div>
+                    <div class="card">
+                        <div class="icon-box orange"><i class="fas fa-clipboard"></i></div>
+                        <h3>DENUNCIAS E INFORMES</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow purple"><i class="fas fa-user-lock"></i></div>
-                    <h3>BÚSQUEDA Y CAPTURA</h3>
-                </div>
+                    <div class="card">
+                        <div class="icon-box red"><i class="fas fa-car"></i></div>
+                        <h3>VEHÍCULOS</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow gold"><i class="fas fa-sack-dollar"></i></div>
-                    <h3>DEUDORES</h3>
-                </div>
+                    <!-- BOTÓN CÓDIGO PENAL -->
+                    <div class="card" onclick="openPenalCode()">
+                        <div class="icon-box yellow"><i class="fas fa-scale-balanced"></i></div>
+                        <h3>CÓDIGO PENAL</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow yellow"><i class="fas fa-lock"></i></div>
-                    <h3>INVESTIGACIONES</h3>
-                </div>
+                    <div class="card">
+                        <div class="icon-box purple"><i class="fas fa-user-lock"></i></div>
+                        <h3>BÚSQUEDA Y CAPTURA</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow blue"><i class="fas fa-user-shield"></i></div>
-                    <h3>GESTOR DE AGENTES</h3>
-                </div>
+                    <div class="card">
+                        <div class="icon-box gold"><i class="fas fa-sack-dollar"></i></div>
+                        <h3>DEUDORES</h3>
+                    </div>
 
-                <div class="dash-card">
-                    <div class="icon-glow gray"><i class="fas fa-video"></i></div>
-                    <h3>CÁMARAS</h3>
-                </div>
-            </div>
+                    <div class="card">
+                        <div class="icon-box yellow"><i class="fas fa-lock"></i></div>
+                        <h3>INVESTIGACIONES</h3>
+                    </div>
 
-            <!-- FOOTER GRANDE -->
-            <div class="bottom-panels">
-                <div class="panel-box radio-panel">
-                    <div class="radio-icon"><i class="fas fa-radio"></i></div>
-                    <h2>RADIO</h2>
-                </div>
-                <div class="panel-box service-panel" onclick="toggleService()">
-                    <div class="service-icon"><i class="fas fa-link"></i></div>
-                    <h2>SERVICIO</h2>
-                </div>
-            </div>
-        </section>
+                    <div class="card">
+                        <div class="icon-box blue"><i class="fas fa-users"></i></div>
+                        <h3>GESTOR DE AGENTES</h3>
+                    </div>
 
-        <!-- PANTALLA 2: CÓDIGO PENAL (LISTA) -->
-        <section id="penal-screen" class="hidden-screen">
-            
-            <div class="nav-back">
-                <button class="btn-back" onclick="switchScreen('home-screen')">
-                    <i class="fas fa-arrow-left"></i> Volver
+                    <div class="card">
+                        <div class="icon-box gray"><i class="fas fa-video"></i></div>
+                        <h3>CÁMARAS DE SEGURIDAD</h3>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- PANTALLA 2: CÓDIGO PENAL -->
+            <section id="penal-screen" class="screen">
+                <button class="back-btn" onclick="closePenalCode()">
+                    <i class="fas fa-arrow-left"></i> VOLVER AL MENÚ
                 </button>
-                <div class="screen-title">
-                    <i class="fas fa-scale-balanced" style="color:#f1c40f;"></i>
-                    <div class="text">
-                        <h2>CÓDIGO PENAL</h2>
-                        <p>Peninsula RP - Sistema de Consulta Legal</p>
+
+                <div class="penal-header">
+                    <div class="penal-search" style="flex:1">
+                        <input type="text" id="searchInput" placeholder="Buscar artículo, infracción, multa...">
                     </div>
                 </div>
-            </div>
 
-            <!-- ESTADÍSTICAS SUPERIORES -->
-            <div class="stats-row">
-                <div class="stat-box">
-                    <h1 id="totalArticulos">0</h1>
-                    <p>TOTAL ARTÍCULOS</p>
-                </div>
-                <div class="stat-box">
-                    <h1>11</h1>
-                    <p>CAPÍTULOS</p>
-                </div>
-                <div class="stat-box">
-                    <h1 id="totalFiltrados">0</h1>
-                    <p>ARTÍCULOS MOSTRADOS</p>
-                </div>
-            </div>
+                <table class="penal-table">
+                    <thead>
+                        <tr>
+                            <th width="10%">ARTÍCULO</th>
+                            <th width="40%">INFRACCIÓN</th>
+                            <th width="15%">MULTA</th>
+                            <th width="25%">SANCIÓN</th>
+                            <th width="10%">ACCIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penalTableBody">
+                        <!-- Se llena con JS -->
+                    </tbody>
+                </table>
+            </section>
 
-            <!-- BUSCADOR -->
-            <div class="filter-bar">
-                <div class="search-input-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar artículo, infracción, multa...">
-                </div>
-                <select id="chapterSelect">
-                    <option value="all">Todos los Capítulos</option>
-                    <!-- Se llenará con JS -->
-                </select>
-            </div>
+        </main>
+    </div>
 
-            <!-- TABLA DE LEYES -->
-            <div class="table-container">
-                <div class="table-header">
-                    <div class="col-art">ARTÍCULO</div>
-                    <div class="col-inf">INFRACCIÓN</div>
-                    <div class="col-mul">MULTA</div>
-                    <div class="col-san">SANCIÓN</div>
-                    <div class="col-act">ACCIÓN</div>
-                </div>
-                <div id="penalTableBody" class="table-body">
-                    <!-- Aquí se inyectan las filas -->
-                </div>
-            </div>
-
-        </section>
-
-    </main>
-
+    <!-- SCRIPTS -->
     <script src="config.js"></script>
-    <script src="app.js"></script>
+    <!-- Tu archivo app.js con el código penal gigante -->
+    <script src="app.js"></script> 
+
+    <script>
+        // --- 1. LÓGICA DE SEGURIDAD (LOGIN) ---
+        
+        // Comprobar si ya estaba logueado antes
+        if(sessionStorage.getItem('oficialLogueado')) {
+            showMDT();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const badge = document.getElementById('badge').value;
+            const pass = document.getElementById('password').value;
+            
+            // Verifica en tu archivo config.js
+            const user = AGENTES.find(u => u.placa === badge && u.pass === pass);
+
+            if (user) {
+                // Login Correcto
+                sessionStorage.setItem('oficialLogueado', JSON.stringify(user));
+                showMDT();
+            } else {
+                // Login Incorrecto
+                const err = document.getElementById('errorMsg');
+                err.style.display = 'block';
+                // Efecto temblor
+                document.querySelector('.login-box').animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 300 });
+            }
+        });
+
+        function showMDT() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex'; // Flex para mantener estructura
+        }
+
+        window.logout = function() {
+            sessionStorage.removeItem('oficialLogueado');
+            location.reload(); // Recarga la página para volver al login
+        }
+
+        // --- 2. NAVEGACIÓN ---
+        function openPenalCode() {
+            document.getElementById('menu-screen').classList.remove('active');
+            document.getElementById('penal-screen').classList.add('active');
+        }
+
+        function closePenalCode() {
+            document.getElementById('penal-screen').classList.remove('active');
+            document.getElementById('menu-screen').classList.add('active');
+        }
+    </script>
+
 </body>
 </html>
