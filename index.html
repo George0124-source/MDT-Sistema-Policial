@@ -3,39 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Central - Peninsula RP | V2</title>
-    <link rel="stylesheet" href="style.css?v=7.0">
+    <title>MDT - Peninsula RP</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuente Google (Inter y Roboto) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body class="login-body">
-    <div class="login-container">
-        <h2 style="color:white; margin-bottom:20px;">SISTEMA MDT</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label>PLACA</label>
-                <input type="text" id="badge" required>
+<body>
+
+    <!-- BARRA SUPERIOR (Siempre visible) -->
+    <header class="top-bar">
+        <div class="top-left">
+            <button class="web-btn"><i class="fas fa-globe"></i> PENINSULA WEB</button>
+        </div>
+        <div class="top-center">
+            <span>PENINSULA RP - V.2.0</span>
+        </div>
+        <div class="top-right">
+            <div class="status-box off-duty" id="statusBtn" onclick="toggleService()">
+                <i class="fas fa-user-clock"></i> <span id="statusText">FUERA DE SERVICIO</span>
             </div>
-            <div class="input-group">
-                <label>CONTRASEÑA</label>
-                <input type="password" id="password" required>
+            <div class="battery-info">
+                <i class="fas fa-wifi"></i> LTE
+                <i class="fas fa-battery-three-quarters"></i> 80%
             </div>
-            <button type="submit" class="btn-login">ACCEDER</button>
-            <p id="errorMsg" style="color:#dc3545; display:none; margin-top:10px;">Acceso Denegado.</p>
-        </form>
-    </div>
-    <script src="config.js?v=7.0"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const badge = document.getElementById('badge').value;
-            const pass = document.getElementById('password').value;
-            const user = AGENTES.find(u => u.placa === badge && u.pass === pass);
-            if (user) {
-                sessionStorage.setItem('oficialLogueado', JSON.stringify(user));
-                window.location.href = 'sistema.html';
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';
-            }
-        });
-    </script>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main id="app">
+
+        <!-- PANTALLA 1: MENÚ PRINCIPAL (HOME) -->
+        <section id="home-screen" class="active-screen">
+            
+            <div class="section-header">
+                <h2>FUERZAS Y CUERPOS DE SEGURIDAD</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png" class="mini-flag">
+            </div>
+
+            <!-- GRID DE BOTONES -->
+            <div class="dashboard-grid">
+                <div class="dash-card">
+                    <div class="icon-glow blue"><i class="fas fa-desktop"></i></div>
+                    <h3>DISPATCH</h3>
+                </div>
+                
+                <div class="dash-card" onclick="alert('Próximamente: Buscador de Ciudadanos')">
+                    <div class="icon-glow blue"><i class="fas fa-magnifying-glass"></i></div>
+                    <h3>BÚSQUEDA CIUDADANA</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow orange"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>DENUNCIAS E INFORMES</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow red"><i class="fas fa-car-side"></i></div>
+                    <h3>VEHÍCULOS</h3>
+                </div>
+
+                <!-- BOTÓN QUE ABRE EL CÓDIGO PENAL -->
+                <div class="dash-card" onclick="switchScreen('penal-screen')">
+                    <div class="icon-glow yellow"><i class="fas fa-scale-balanced"></i></div>
+                    <h3>CÓDIGO PENAL</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow purple"><i class="fas fa-user-lock"></i></div>
+                    <h3>BÚSQUEDA Y CAPTURA</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow gold"><i class="fas fa-sack-dollar"></i></div>
+                    <h3>DEUDORES</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow yellow"><i class="fas fa-lock"></i></div>
+                    <h3>INVESTIGACIONES</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow blue"><i class="fas fa-user-shield"></i></div>
+                    <h3>GESTOR DE AGENTES</h3>
+                </div>
+
+                <div class="dash-card">
+                    <div class="icon-glow gray"><i class="fas fa-video"></i></div>
+                    <h3>CÁMARAS</h3>
+                </div>
+            </div>
+
+            <!-- FOOTER GRANDE -->
+            <div class="bottom-panels">
+                <div class="panel-box radio-panel">
+                    <div class="radio-icon"><i class="fas fa-radio"></i></div>
+                    <h2>RADIO</h2>
+                </div>
+                <div class="panel-box service-panel" onclick="toggleService()">
+                    <div class="service-icon"><i class="fas fa-link"></i></div>
+                    <h2>SERVICIO</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 2: CÓDIGO PENAL (LISTA) -->
+        <section id="penal-screen" class="hidden-screen">
+            
+            <div class="nav-back">
+                <button class="btn-back" onclick="switchScreen('home-screen')">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <div class="screen-title">
+                    <i class="fas fa-scale-balanced" style="color:#f1c40f;"></i>
+                    <div class="text">
+                        <h2>CÓDIGO PENAL</h2>
+                        <p>Peninsula RP - Sistema de Consulta Legal</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESTADÍSTICAS SUPERIORES -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <h1 id="totalArticulos">0</h1>
+                    <p>TOTAL ARTÍCULOS</p>
+                </div>
+                <div class="stat-box">
+                    <h1>11</h1>
+                    <p>CAPÍTULOS</p>
+                </div>
+                <div class="stat-box">
+                    <h1 id="totalFiltrados">0</h1>
+                    <p>ARTÍCULOS MOSTRADOS</p>
+                </div>
+            </div>
+
+            <!-- BUSCADOR -->
+            <div class="filter-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar artículo, infracción, multa...">
+                </div>
+                <select id="chapterSelect">
+                    <option value="all">Todos los Capítulos</option>
+                    <!-- Se llenará con JS -->
+                </select>
+            </div>
+
+            <!-- TABLA DE LEYES -->
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="col-art">ARTÍCULO</div>
+                    <div class="col-inf">INFRACCIÓN</div>
+                    <div class="col-mul">MULTA</div>
+                    <div class="col-san">SANCIÓN</div>
+                    <div class="col-act">ACCIÓN</div>
+                </div>
+                <div id="penalTableBody" class="table-body">
+                    <!-- Aquí se inyectan las filas -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
