@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+Index.html MDT
+
+ç<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -7,46 +9,32 @@
     <link rel="stylesheet" href="style.css?v=7.0">
 </head>
 <body class="login-body">
-    
     <div class="login-container">
         <h2 style="color:white; margin-bottom:20px;">SISTEMA MDT</h2>
-        
         <form id="loginForm">
             <div class="input-group">
                 <label>PLACA</label>
-                <input type="text" id="badge" required autocomplete="off">
+                <input type="text" id="badge" required>
             </div>
-            
             <div class="input-group">
                 <label>CONTRASEÑA</label>
                 <input type="password" id="password" required>
             </div>
-            
             <button type="submit" class="btn-login">ACCEDER</button>
-            
             <p id="errorMsg" style="color:#dc3545; display:none; margin-top:10px;">Acceso Denegado.</p>
         </form>
     </div>
-
-    <!-- Cargar configuración de agentes -->
     <script src="config.js?v=7.0"></script>
-
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const badge = document.getElementById('badge').value;
             const pass = document.getElementById('password').value;
-            
-            // Verifica la placa y contraseña en la lista de agentes
             const user = AGENTES.find(u => u.placa === badge && u.pass === pass);
-            
             if (user) {
-                // Guarda la sesión y redirige al sistema
                 sessionStorage.setItem('oficialLogueado', JSON.stringify(user));
                 window.location.href = 'sistema.html';
             } else {
-                // Muestra error
                 document.getElementById('errorMsg').style.display = 'block';
             }
         });
