@@ -3,42 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Central - Peninsula RP | V2</title>
+    <title>Sede Nacional de Identificación - Ministerio del Interior</title>
     <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1380945384058126337/1447347554093240371/content.png?ex=694c62f3&is=694b1173&hm=167007c5423f101a8cb1929facbe7c8b45ec56a4e914338ff2b48191497ac6c1&=&format=webp&quality=lossless&width=1029&height=686">
-    <link rel="stylesheet" href="style.css?v=7.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
-<body class="login-body">
-    <div class="login-container">
-        <h2 style="color:white; margin-bottom:20px;">SISTEMA MDT</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label>PLACA</label>
-                <input type="text" id="badge" required>
+<body>
+
+    <!-- LOGIN -->
+    <div id="login-view" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-header"><img src="https://www.dyntra.org/new/wp-content/uploads/2017/05/ministerio-de-interior.jpg"></div>
+            <div class="auth-body">
+                <h2>Acceso Restringido</h2>
+                <p>Sistema Nacional de Identificación Ciudadana</p>
+                <button class="btn-discord" onclick="authorizeDiscord()">
+                    <i class="fab fa-discord"></i> AUTORIZAR CON DISCORD
+                </button>
+                <div id="badge-login-area" class="hidden">
+                    <div class="input-field">
+                        <label>Credencial de Acceso</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-badge"></i>
+                            <input type="password" id="badge-input" placeholder="Introduzca su placa...">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="handleLogin()">Iniciar Sesión</button>
+                </div>
+                <div class="auth-footer">¿Ciudadano? <button class="btn-link" onclick="showRequestForm()">Solicitar DNI</button></div>
             </div>
-            <div class="input-group">
-                <label>CONTRASEÑA</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" class="btn-login">ACCEDER</button>
-            <p id="errorMsg" style="color:#dc3545; display:none; margin-top:10px;">Acceso Denegado.</p>
-        </form>
+        </div>
     </div>
-    <script src="config.js?v=7.0"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const badge = document.getElementById('badge').value;
-            const pass = document.getElementById('password').value;
-            const user = AGENTES.find(u => u.placa === badge && u.pass === pass);
-            if (user) {
-                sessionStorage.setItem('oficialLogueado', JSON.stringify(user));
-                window.location.href = 'sistema.html';
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';
-            }
-        });
-    </script>
+
+    <!-- REGISTRO CON LICENCIAS -->
+    <div id="request-view" class="auth-screen hidden">
+        <div class="auth-card wide">
+            <div class="auth-body">
+                <h2>Registro de Ciudadano</h2>
+                <div class="form-grid">
+                    <div class="input-field"><label>Nombre Completo</label><input type="text" id="req-name"></div>
+                    <div class="input-field"><label>Nacimiento</label><input type="date" id="req-dob"></div>
+                    <div class="input-field"><label>Usuario Roblox</label><input type="text" id="req-roblox"></div>
+                    <div class="input-field"><label>Discord ID</label><input type="text" id="req-discordid"></div>
+                </div>
+                <p style="text-align:left; font-size:10px; font-weight:800; color:var(--navy); margin:10px 0;">SOLICITUD DE LICENCIAS</p>
+                <div class="license-form-grid">
+                    <div class="lic-item"><input type="checkbox" id="req-lic-b"> <i class="fas fa-car"></i> Conducir</div>
+                    <div class="lic-item"><input type="checkbox" id="req-lic-a"> <i class="fas fa-gun"></i> Armas</div>
+                    <div class="lic-item"><input type="checkbox" id="req-lic-d"> <i class="fas fa-helicopter"></i> Drones</div>
+                </div>
+                <div class="form-actions" style="margin-top:20px">
+                    <button class="btn-primary" onclick="submitRequest()">Enviar Solicitud</button>
+                    <button class="btn-secondary" onclick="location.reload()">Volver</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard-view" class="dashboard-screen hidden">
+        <header class="top-nav">
+            <div class="nav-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Logotipo_del_Ministerio_del_Interior.svg/2560px-Logotipo_del_Ministerio_del_Interior.svg.png"></div>
+            <div class="nav-user">
+                <div class="sede-tag"><i class="far fa-file-alt"></i> <span>Sede de Identificación</span></div>
+                <span id="user-badge-display">---</span>
+                <button class="logout-pill" onclick="logout()">Salir</button>
+            </div>
+        </header>
+        <main class="content-area">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Buscar..." onkeyup="filterList()"></div>
+                    <div class="filter-tabs">
+                        <button class="tab" onclick="loadCitizens()">Ciudadanos</button>
+                        <button class="tab" id="btn-solicitudes" style="display:none;" onclick="loadRequests()">Solicitudes</button>
+                        <button class="tab" id="btn-placas" style="display:none;" onclick="loadBadgesManage()">Gestión</button>
+                        <button class="tab" id="btn-logs" style="display:none;" onclick="loadLogs()">Logs</button>
+                    </div>
+                </div>
+                <div class="sidebar-scrollable"><div id="list-render"></div></div>
+            </aside>
+            <section class="details-view"><div id="details-panel" class="details-container"></div></section>
+        </main>
+    </div>
+    
+    <!-- MODAL DEL CARNET FÍSICO CON LOGO LA PENINSULA -->
+    <div id="dni-card-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeDNIModal()">&times;</span>
+            <div class="dni-card">
+                <div class="dni-header">
+                    <img src="https://cdn.discordapp.com/attachments/1355669514192290035/1452835453979070616/468676ef8092bf0d3e29a69d38589197.webp?ex=694b41f4&is=6949f074&hm=da1f5fb6d789bc8bc1135fb3c6bc8cd14662d2a5ef913517da1357fb163c410f&" class="dni-flag">
+                    <div class="dni-titles"><h1>LA PENÍNSULA RP</h1><h2>SISTEMA NACIONAL DE IDENTIDAD</h2></div>
+                    <img src="https://www.dyntra.org/new/wp-content/uploads/2017/05/ministerio-de-interior.jpg" class="dni-escudo">
+                </div>
+                <div class="dni-body">
+                    <div class="dni-photo-container"><img id="card-photo" src="" alt="Foto"></div>
+                    <div class="dni-data">
+                        <div class="dni-row"><label>APELLIDOS Y NOMBRE</label><p id="card-name"></p></div>
+                        <div class="dni-row"><label>FECHA NACIMIENTO / NACIONALIDAD</label><p><span id="card-dob"></span> / ESP</p></div>
+                        <div class="dni-row">
+                            <label>LICENCIAS</label>
+                            <div class="card-lic-container" id="card-lics-display"></div>
+                        </div>
+                        <div class="dni-num-row"><label>ID NR.</label><span id="card-dni"></span></div>
+                    </div>
+                </div>
+                <div class="dni-chip"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
-
