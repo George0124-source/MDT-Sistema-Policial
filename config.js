@@ -12,8 +12,9 @@ const WEBHOOK_STAFF = "https://discord.com/api/webhooks/1446993873975906344/lmlM
 const AGENTES = [
     { placa: "CF-001", pass: "Jorge0124", rango: "Co-Fundador", discordId: "803332911926739005" },
     { placa: "FN-001", pass: "Alex0124", rango: "Fundador", discordId: "739425840214835270" },
-    { placa: "GC-001", pass: "Prueba", rango: "Jefe GC", discordId: "1066088410290339890" },
+    { placa: "GC-001", pass: "Gcx7IsNav1990", rango: "Jefe GC", discordId: "1066088410290339890" },
 ];
+
 
 
 
