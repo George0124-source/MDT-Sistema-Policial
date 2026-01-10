@@ -528,9 +528,23 @@
             }
             window.clearAll();
         };
+        // --- RELOJ EN TIEMPO REAL ---
+        function actualizarReloj() {
+            const ahora = new Date();
+            const horaString = ahora.toLocaleTimeString('es-ES'); // Formato 24h
+            const elementoReloj = document.getElementById('reloj');
+            if (elementoReloj) {
+                elementoReloj.innerText = horaString;
+            }
+        }
+        
+        // Actualizar cada segundo
+        setInterval(actualizarReloj, 1000);
+        actualizarReloj(); // Ejecutar nada más cargar
     </script>
 </body>
 </html>
+
 
 
 
