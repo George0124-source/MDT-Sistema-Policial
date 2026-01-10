@@ -11,7 +11,18 @@
 body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--dark-bg); color: var(--text-main); }
 
 /* Login */
-.login-body { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #001f3f 0%, #000000 100%); }
+.login-body { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    /* FONDO MODIFICADO AQUÍ: Gradiente oscuro + Imagen */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('Peninsula.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .login-container { background: var(--panel-bg); padding: 40px; border-radius: 10px; width: 350px; text-align: center; border-top: 5px solid var(--cnp-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .input-group { margin-bottom: 15px; text-align: left; }
 .input-group label { display: block; font-size: 12px; color: #888; font-weight: bold; margin-bottom: 5px; }
@@ -62,4 +73,3 @@ input:focus, textarea:focus { border-color: var(--accent); outline: none; }
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-
